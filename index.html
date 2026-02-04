@@ -319,6 +319,7 @@
         // --- CONSTANTS & CONFIG ---
         const WORKER_ENDPOINT = "https://performance-marketing-api.listandsouza.workers.dev";
         const DEFAULT_MODEL = "openai/gpt-oss-120b";
+        const API_TIMEOUT_MS = 30000; // 30 seconds
         
         const DEFAULT_SYSTEM_PROMPT = "You are Performance Marketing GPT, an elite digital advertising strategist specializing in Google Performance Max (PMax) campaigns. Your goal is to maximize ROAS and Conversions. You speak in a professional, agency-grade tone. You provide actionable, data-driven advice. When asked for ad copy, you strictly adhere to PMax character limits (Headline: 30, Long Headline: 90, Description: 90). You prioritize conversion psychology, audience signals, and asset diversity.";
         
@@ -659,7 +660,7 @@
                         
                         // Fallback to Offline Logic
                         const fallbackText = generateNormalResponse(text, image);
-                        responseText = fallbackText + "\n\n_⚠️ Note: Cloud connection unavailable. Using offline decision-support framework._";
+                        responseText = fallbackText + "\n\n_⚠️ Note: Cloud connection unavailable. Using offline guidance mode._";
                         await typeTextEffect(contentDiv, responseText);
                         
                         // Reset footer after 5 seconds
@@ -720,7 +721,7 @@
             ];
 
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+            const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
 
             try {
                 const response = await fetch(WORKER_ENDPOINT, {
@@ -736,21 +737,23 @@
                 clearTimeout(timeoutId);
 
                 if (!response.ok) {
-                    const errorText = await response.text().catch(() => 'Unknown error');
-                    throw new Error(`Worker failed with status ${response.status}: ${errorText}`);
+                    // Log technical details for debugging
+                    console.error('API Error:', response.status, response.statusText);
+                    throw new Error('Unable to connect to the service. Please try again.');
                 }
 
                 const data = await response.json();
                 
                 if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-                    throw new Error('Invalid response format from worker');
+                    console.error('Invalid API response format:', data);
+                    throw new Error('Received unexpected response format. Please try again.');
                 }
                 
                 return data.choices[0].message.content;
             } catch (error) {
                 clearTimeout(timeoutId);
                 if (error.name === 'AbortError') {
-                    throw new Error('Request timeout - please try again');
+                    throw new Error('Request timeout after 30 seconds - please check your connection and try again');
                 }
                 throw error;
             }
