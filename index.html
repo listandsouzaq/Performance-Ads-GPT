@@ -1,114 +1,198 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="antialiased">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Performance Marketing GPT</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Performance Marketing GPT | PMax Specialist</title>
+  <meta name="description" content="AI-powered performance marketing reasoning engine." />
 
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-.typing::after { content:"▋"; animation:blink 1s infinite; }
-@keyframes blink { 50%{opacity:0} }
-</style>
+  <!-- Markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <style>
+    body { font-family: system-ui, sans-serif; }
+    .typing::after {
+      content: "▋";
+      animation: blink 1s infinite;
+      margin-left: 2px;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+  </style>
 </head>
 
 <body class="bg-gray-100 dark:bg-slate-900 text-gray-900 dark:text-gray-100">
 
-<div class="max-w-3xl mx-auto p-4">
+<!-- Loader -->
+<div id="loading" class="h-screen flex items-center justify-center text-sm">
+  Initializing Performance Engine…
+</div>
 
-<h1 class="font-bold text-xl mb-4">Performance Marketing GPT</h1>
+<!-- App -->
+<div id="app" class="max-w-4xl mx-auto p-4 opacity-0">
 
-<div id="chat" class="space-y-4 mb-4"></div>
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="font-bold text-lg">Performance Marketing GPT</h1>
+    <button onclick="toggleTheme()" class="text-xs opacity-70">Toggle Theme</button>
+  </div>
 
-<textarea id="input"
-  class="w-full p-3 rounded-lg border dark:bg-slate-800"
-  placeholder="Ask about PMax, ROAS, SEO, CRO, strategy…"
-  onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}">
-</textarea>
+  <!-- Chat -->
+  <div id="chat" class="min-h-[300px] mb-4"></div>
 
-<p class="text-xs opacity-40 mt-6 text-center">
-Powered by Listan Dsouza
-</p>
+  <!-- Input -->
+  <textarea id="input"
+    class="w-full p-3 rounded-lg border dark:bg-slate-800"
+    placeholder="Ask about PMax, ROAS, SEO, CRO, budgets, scaling…"
+    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}">
+  </textarea>
+
+  <!-- Watermark -->
+  <div class="text-center text-xs opacity-40 mt-6">
+    Powered by Listan Dsouza
+  </div>
 </div>
 
 <script>
-const API = "https://performance-marketing-api.listandsouza.workers.dev";
+/* ================= CONFIG ================= */
+const WORKER_ENDPOINT =
+  "https://performance-marketing-api.listandsouza.workers.dev";
 const MODEL = "openai/gpt-oss-120b";
 
-let messages = [];
+/* ================= STATE ================= */
+const state = {
+  messages: [],
+  isTyping: false
+};
 
-function intent(q){
-  q=q.toLowerCase();
-  if(q.includes("pmax")) return "Performance Max";
-  if(q.includes("seo")) return "SEO";
-  if(q.includes("cro")||q.includes("conversion")) return "CRO";
+/* ================= INIT ================= */
+window.onload = () => {
+  marked.setOptions({ breaks: true });
+  document.getElementById("loading").remove();
+  document.getElementById("app").style.opacity = "1";
+};
+
+/* ================= SEND ================= */
+async function sendMessage() {
+  if (state.isTyping) return;
+
+  const input = document.getElementById("input");
+  const text = input.value.trim();
+  if (!text) return;
+
+  input.value = "";
+  state.messages.push({ role: "user", content: text });
+  render();
+
+  state.isTyping = true;
+  appendThinking();
+
+  try {
+    const intent = classifyIntent(text);
+    const clarify = autoClarify(text, intent);
+
+    let reply;
+    if (clarify) {
+      reply = clarify;
+    } else {
+      reply = await callWorker(state.messages, intent);
+    }
+
+    state.messages.push({ role: "assistant", content: reply });
+  } catch (e) {
+    state.messages.push({
+      role: "assistant",
+      content: offlineLogic(text)
+    });
+  }
+
+  state.isTyping = false;
+  render();
+}
+
+/* ================= WORKER ================= */
+async function callWorker(messages, intent) {
+  const res = await fetch(WORKER_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: MODEL,
+      messages: [
+        {
+          role: "system",
+          content:
+            `You are a ${intent} expert. Answer logically, step-by-step, using real-world marketing reasoning.`
+        },
+        ...messages
+      ]
+    })
+  });
+
+  if (!res.ok) throw new Error("Worker failed");
+  const data = await res.json();
+  return data.choices[0].message.content;
+}
+
+/* ================= INTENT ================= */
+function classifyIntent(q) {
+  q = q.toLowerCase();
+  if (q.includes("pmax")) return "Performance Max";
+  if (q.includes("seo")) return "SEO";
+  if (q.includes("cro") || q.includes("conversion")) return "CRO";
   return "Marketing Strategy";
 }
 
-function clarify(q,i){
-  if(i==="Performance Max"&&!q.match(/\d|\$/))
-    return "What is your **daily budget and target CPA**?";
-  if(i==="SEO"&&!q.includes("site"))
-    return "Which **website or niche** is this for?";
-  if(i==="CRO"&&!q.includes("traffic"))
-    return "What is your **monthly traffic and conversion rate**?";
+/* ================= CLARIFY ================= */
+function autoClarify(q, intent) {
+  if (intent === "Performance Max" && !q.match(/\d|\$/))
+    return "Before optimizing PMax, what is your **daily budget and target CPA**?";
+  if (intent === "SEO" && !q.includes("site"))
+    return "Which **website or niche** are you optimizing for SEO?";
+  if (intent === "CRO" && !q.includes("traffic"))
+    return "What is your **monthly traffic and current conversion rate**?";
   return null;
 }
 
-async function send(){
-  const input=document.getElementById("input");
-  const text=input.value.trim();
-  if(!text) return;
-  input.value="";
-
-  messages.push({role:"user",content:text});
-  render();
-
-  const i=intent(text);
-  const c=clarify(text,i);
-  if(c){
-    messages.push({role:"assistant",content:c});
-    render();
-    return;
-  }
-
-  messages.push({role:"assistant",content:"Thinking…",typing:true});
-  render();
-
-  try{
-    const res=await fetch(API,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        model:MODEL,
-        messages:[
-          {role:"system",content:`You are a ${i} expert.`},
-          ...messages.filter(m=>!m.typing)
-        ]
-      })
-    });
-
-    const data=await res.json();
-    messages.pop();
-    messages.push({role:"assistant",content:data.choices[0].message.content});
-  }catch{
-    messages.pop();
-    messages.push({role:"assistant",content:"Strategy fails when assumptions are wrong. Clarify inputs before scaling."});
-  }
-
-  render();
+/* ================= OFFLINE ================= */
+function offlineLogic(q) {
+  q = q.toLowerCase();
+  if (q.includes("roas"))
+    return "ROAS drops when traffic quality, offer, or conversion rate breaks. Fix landing page before bids.";
+  if (q.includes("budget"))
+    return "Daily budget should be 3–5× CPA. Never scale more than 20% per day.";
+  if (q.includes("headline"))
+    return "High-performing headlines = Outcome + Urgency + Clarity.";
+  return "Strong marketing decisions come from correct assumptions, not more spend.";
 }
 
-function render(){
-  document.getElementById("chat").innerHTML=messages.map(m=>`
-    <div class="${m.role==="user"?"text-right":""}">
-      <div class="inline-block p-3 rounded-lg bg-white dark:bg-slate-800 prose dark:prose-invert ${m.typing?"typing":""}">
+/* ================= UI ================= */
+function appendThinking() {
+  const chat = document.getElementById("chat");
+  chat.innerHTML += `
+    <div class="mb-4">
+      <div class="inline-block p-3 rounded-lg bg-white dark:bg-slate-800 typing">
+        Thinking…
+      </div>
+    </div>`;
+}
+
+function render() {
+  const chat = document.getElementById("chat");
+  chat.innerHTML = state.messages.map(m => `
+    <div class="mb-4 ${m.role === "user" ? "text-right" : ""}">
+      <div class="inline-block p-3 rounded-lg bg-white dark:bg-slate-800 prose dark:prose-invert">
         ${marked.parse(m.content)}
       </div>
     </div>
   `).join("");
+  chat.scrollTop = chat.scrollHeight;
+}
+
+/* ================= THEME ================= */
+function toggleTheme() {
+  document.documentElement.classList.toggle("dark");
 }
 </script>
 
