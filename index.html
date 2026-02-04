@@ -3,19 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Performance Marketing GPT | PMax Specialist</title>
-    <meta name="description" content="AI-powered Performance Max advertising assistant. Powered by Listan Dsouza.">
-    <meta name="keywords" content="Performance Max, PMax, Google Ads, Meta Ads, CRO, SEO, Digital Marketing">
-    <meta name="author" content="Listan Dsouza">
+    <title>Live AI Assistant | Real-time Intelligence</title>
+    <meta name="description" content="AI-powered assistant with live internet access. Powered by Listan Dsouza.">
     
-    <!-- Open Graph / Social Media -->
-    <meta property="og:title" content="Performance Marketing GPT | PMax Specialist">
-    <meta property="og:description" content="AI-powered Performance Max advertising assistant">
-    <meta property="og:type" content="website">
-    
-    <!-- Accessibility -->
-    <meta name="theme-color" content="#0ea5e9">
-
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -37,20 +27,6 @@
                             surface: '#1e293b',
                             border: '#334155'
                         }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'float': 'float 6s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        }
                     }
                 }
             }
@@ -58,1040 +34,368 @@
     </script>
 
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Marked.js for Markdown -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Prose Markdown Styling */
+        /* Markdown Styling */
         .prose p { margin-bottom: 1rem; line-height: 1.6; }
         .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
         .prose ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; }
-        .prose h1, .prose h2, .prose h3 { font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; color: inherit; }
-        .prose code { background: rgba(0,0,0,0.1); padding: 0.2rem 0.4rem; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.875em; }
-        .dark .prose code { background: rgba(255,255,255,0.1); color: #e2e8f0; }
-        .prose pre { background: #1e293b; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1rem; color: #f8fafc; }
-        .prose pre code { background: transparent; padding: 0; color: inherit; }
+        .prose h1, .prose h2, .prose h3 { font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        .prose code { background: rgba(0,0,0,0.1); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.875em; }
+        .dark .prose code { background: rgba(255,255,255,0.1); }
+        .prose pre { background: #1e293b; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1rem; }
         .prose blockquote { border-left: 4px solid #0ea5e9; padding-left: 1rem; font-style: italic; opacity: 0.8; }
-        .prose table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
-        .prose th, .prose td { border: 1px solid #e2e8f0; padding: 0.5rem; text-align: left; }
-        .dark .prose th, .dark .prose td { border-color: #334155; }
 
-        /* Typing Cursor */
-        .typing-cursor::after {
-            content: '▋';
-            animation: blink 1s step-start infinite;
-            color: #0ea5e9;
-            margin-left: 2px;
+        /* Typing Animation */
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #0ea5e9;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out;
         }
-        @keyframes blink { 50% { opacity: 0; } }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
 
-        /* Loader */
-        #loading {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #0f172a; z-index: 9999; display: flex;
-            justify-content: center; align-items: center; color: white;
-            flex-direction: column; transition: opacity 0.5s ease;
-        }
-        .loader-spinner {
-            width: 40px; height: 40px; border: 4px solid #334155;
-            border-top: 4px solid #0ea5e9; border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 1rem;
-        }
+        /* Loading Spinner */
+        .loader { border: 3px solid #334155; border-top: 3px solid #0ea5e9; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Animated Background */
-        .bg-grid {
-            background-size: 40px 40px;
-            background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .dark .bg-grid {
-            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-        }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-dark-bg text-gray-900 dark:text-gray-100 font-sans transition-colors duration-200 overflow-hidden h-[100dvh] flex flex-col">
 
-    <!-- Loading Screen -->
-    <div id="loading">
-        <div class="loader-spinner"></div>
-        <div class="text-sm font-medium tracking-widest uppercase">Initializing System</div>
-    </div>
+<body class="bg-gray-50 dark:bg-dark-bg text-gray-900 dark:text-gray-100 transition-colors duration-200 h-screen flex flex-col overflow-hidden">
 
-    <!-- Main App Container -->
-    <div id="app" class="flex h-full w-full relative opacity-0 transition-opacity duration-500">
-        
-        <!-- Background Effects -->
-        <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-            <div class="absolute inset-0 bg-grid"></div>
-            <div class="absolute top-0 right-0 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
-            <div class="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl animate-float"></div>
+    <!-- Header -->
+    <header class="bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border px-4 py-3 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center text-white">
+                <i class="fa-solid fa-robot text-lg"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-lg">Live AI Assistant</h1>
+                <p class="text-xs text-gray-500 dark:text-gray-400" id="status">
+                    <i class="fa-solid fa-circle text-green-500 text-[6px]"></i> Online • Real-time Internet Access
+                </p>
+            </div>
         </div>
+        <div class="flex items-center gap-2">
+            <button onclick="toggleTheme()" class="w-9 h-9 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
+                <i id="theme-icon" class="fa-solid fa-moon text-gray-600 dark:text-gray-400"></i>
+            </button>
+            <button onclick="clearChat()" class="w-9 h-9 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-trash text-gray-600 dark:text-gray-400"></i>
+            </button>
+        </div>
+    </header>
 
-        <!-- Sidebar -->
-        <aside id="sidebar" class="w-72 bg-white dark:bg-dark-surface border-r border-gray-200 dark:border-dark-border flex flex-col z-20 absolute md:relative h-full transition-transform duration-300 transform -translate-x-full md:translate-x-0 shadow-xl md:shadow-none">
-            <!-- Sidebar Header -->
-            <div class="p-4 border-b border-gray-200 dark:border-dark-border flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center text-white" role="img" aria-label="Performance Marketing GPT logo">
-                        <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
-                    </div>
-                    <span class="font-bold text-sm tracking-tight">Performance<br>Marketing GPT</span>
-                </div>
-                <button onclick="toggleSidebar()" class="md:hidden text-gray-500 hover:text-brand-500 transition-colors" aria-label="Close sidebar">
-                    <i class="fa-solid fa-times text-xl" aria-hidden="true"></i>
+    <!-- Chat Container -->
+    <div id="chat-container" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 pb-6">
+        <!-- Welcome Screen -->
+        <div id="welcome" class="flex flex-col items-center justify-center h-full text-center space-y-4">
+            <div class="w-20 h-20 bg-gradient-to-br from-brand-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-4xl shadow-lg mb-2">
+                <i class="fa-solid fa-globe"></i>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold">Ask me anything!</h2>
+            <p class="max-w-md text-sm text-gray-500 dark:text-gray-400">
+                I have <strong>live internet access</strong> and can search for the latest information, news, weather, prices, and more.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl w-full mt-6">
+                <button onclick="setInput('What is the current weather in Mumbai?')" class="p-4 bg-white dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-xl hover:border-brand-500 transition-all shadow-sm text-left">
+                    <i class="fa-solid fa-cloud-sun text-brand-500 text-xl mb-2"></i>
+                    <div class="font-semibold text-sm">Current Weather</div>
+                    <div class="text-xs text-gray-500">Get live weather updates</div>
                 </button>
-            </div>
-
-            <!-- New Chat Button -->
-            <div class="p-3">
-                <button onclick="createNewChat()" class="w-full py-2.5 px-4 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 border border-gray-200 dark:border-dark-border text-gray-700 dark:text-gray-200" aria-label="Create new campaign strategy">
-                    <i class="fa-solid fa-plus text-xs" aria-hidden="true"></i>
-                    New Campaign Strategy
+                <button onclick="setInput('What are the latest tech news today?')" class="p-4 bg-white dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-xl hover:border-brand-500 transition-all shadow-sm text-left">
+                    <i class="fa-solid fa-newspaper text-brand-500 text-xl mb-2"></i>
+                    <div class="font-semibold text-sm">Latest News</div>
+                    <div class="text-xs text-gray-500">Today's top stories</div>
                 </button>
-            </div>
-
-            <!-- Chat History -->
-            <div class="flex-1 overflow-y-auto p-3 space-y-2" id="chat-history-list" role="list" aria-label="Chat history">
-                <!-- Chat items injected here -->
-            </div>
-
-            <!-- Sidebar Footer -->
-            <div class="p-4 border-t border-gray-200 dark:border-dark-border bg-gray-50 dark:bg-slate-900/50">
-                <div class="flex flex-col gap-2">
-                    
-                    <button onclick="openSettings()" class="flex items-center gap-2 text-xs font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors p-1">
-                        <i class="fa-solid fa-gear"></i> Settings & Info
-                    </button>
-
-                    <!-- Watermark -->
-                    <div class="mt-2 text-[10px] text-center text-gray-400 dark:text-gray-600 font-mono border-t border-gray-200 dark:border-gray-800 pt-2">
-                        Powered by Listan Dsouza
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Overlay for Mobile Sidebar -->
-        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-10 hidden md:hidden glass-effect"></div>
-
-        <!-- Main Chat Area -->
-        <main class="flex-1 flex flex-col h-full relative z-0">
-            <!-- Header -->
-            <header class="h-14 border-b border-gray-200 dark:border-dark-border bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md flex items-center justify-between px-4 sticky top-0 z-10">
-                <div class="flex items-center gap-3">
-                    <button onclick="toggleSidebar()" class="md:hidden text-gray-500" aria-label="Open sidebar">
-                        <i class="fa-solid fa-bars" aria-hidden="true"></i>
-                    </button>
-                    <h1 id="current-chat-title" class="font-semibold text-sm md:text-base truncate max-w-[200px] md:max-w-md">New Strategy Session</h1>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button onclick="toggleTheme()" class="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors text-gray-500 dark:text-gray-400" aria-label="Toggle dark mode">
-                        <i id="theme-icon" class="fa-solid fa-moon" aria-hidden="true"></i>
-                    </button>
-                </div>
-            </header>
-
-            <!-- Messages Container -->
-            <div id="chat-container" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 pb-32">
-                <!-- Welcome Message -->
-                <div class="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-70" id="welcome-screen">
-                    <div class="w-16 h-16 bg-gradient-to-br from-brand-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-3xl shadow-lg mb-2">
-                        <i class="fa-solid fa-bolt"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold">Performance Marketing GPT</h2>
-                    <p class="max-w-md text-sm text-gray-500 dark:text-gray-400">
-                        Specialized AI for Google Performance Max campaigns, asset optimization, and conversion strategy.
-                    </p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-lg w-full mt-4">
-                        <button onclick="setInput('Generate PMax headlines for a luxury watch brand')" class="p-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-lg text-xs hover:border-brand-500 dark:hover:border-brand-500 transition-colors text-left shadow-sm" aria-label="Generate PMax headlines example">
-                            <i class="fa-solid fa-pen-nib text-brand-500 mr-2" aria-hidden="true"></i> Write PMax Headlines
-                        </button>
-                        <button onclick="setInput('Analyze competitors for a vegan protein powder')" class="p-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-lg text-xs hover:border-brand-500 dark:hover:border-brand-500 transition-colors text-left shadow-sm" aria-label="Competitor analysis example">
-                            <i class="fa-solid fa-magnifying-glass-chart text-brand-500 mr-2" aria-hidden="true"></i> Competitor Analysis
-                        </button>
-                        <button onclick="setInput('Suggest audience signals for home insurance')" class="p-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-lg text-xs hover:border-brand-500 dark:hover:border-brand-500 transition-colors text-left shadow-sm" aria-label="Audience signals example">
-                            <i class="fa-solid fa-users-viewfinder text-brand-500 mr-2" aria-hidden="true"></i> Audience Signals
-                        </button>
-                        <button onclick="setInput('Optimize this product description for conversions...')" class="p-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-lg text-xs hover:border-brand-500 dark:hover:border-brand-500 transition-colors text-left shadow-sm" aria-label="Optimize assets example">
-                            <i class="fa-solid fa-arrow-trend-up text-brand-500 mr-2" aria-hidden="true"></i> Optimize Assets
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Input Area -->
-            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-white via-white to-transparent dark:from-dark-bg dark:via-dark-bg dark:to-transparent pt-10 pb-4 px-4 z-20">
-                <div class="max-w-3xl mx-auto">
-                    <!-- Image Preview -->
-                    <div id="image-preview-area" class="hidden mb-2 ml-2">
-                        <div class="relative inline-block group">
-                            <img id="preview-img" src="" alt="Upload" class="h-16 w-16 object-cover rounded-lg border border-gray-300 dark:border-dark-border shadow-md">
-                            <button onclick="clearImage()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-sm hover:bg-red-600">
-                                <i class="fa-solid fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Input Bar -->
-                    <div class="bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border rounded-2xl shadow-lg flex items-end p-2 gap-2 transition-all focus-within:ring-2 focus-within:ring-brand-500/20 focus-within:border-brand-500">
-                        <button onclick="document.getElementById('image-upload').click()" class="p-2.5 text-gray-400 hover:text-brand-500 transition-colors rounded-xl hover:bg-gray-100 dark:hover:bg-slate-700 shrink-0" title="Upload Creative" aria-label="Upload image">
-                            <i class="fa-solid fa-image" aria-hidden="true"></i>
-                        </button>
-                        <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="handleImageUpload(this)" aria-label="Image file upload">
-                        
-                        <textarea id="user-input" rows="1" class="w-full bg-transparent border-none focus:ring-0 text-sm md:text-base py-3 resize-none max-h-32 text-gray-800 dark:text-gray-100 placeholder-gray-400" placeholder="Describe your product or paste a URL..." oninput="autoResize(this)" onkeydown="handleEnter(event)" aria-label="Message input"></textarea>
-                        
-                        <button id="send-btn" onclick="sendMessage()" class="p-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl shadow-md transition-all shrink-0 disabled:opacity-50 disabled:cursor-not-allowed" aria-label="Send message">
-                            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <div class="text-center mt-2">
-                        <p class="text-[10px] text-gray-400 dark:text-gray-500 flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-shield-halved text-xs"></i> 
-                            <span id="footer-status">Cloudflare Secured • Hybrid Intelligence</span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Settings Modal -->
-    <div id="settings-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-95 opacity-0" id="settings-content">
-            <div class="p-4 border-b border-gray-200 dark:border-dark-border flex justify-between items-center bg-gray-50 dark:bg-slate-900/50">
-                <h3 class="font-bold text-lg"><i class="fa-solid fa-sliders mr-2 text-brand-500"></i>Configuration</h3>
-                <button onclick="closeSettings()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-200">
-                    <i class="fa-solid fa-times"></i>
+                <button onclick="setInput('What is the price of Bitcoin right now?')" class="p-4 bg-white dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-xl hover:border-brand-500 transition-all shadow-sm text-left">
+                    <i class="fa-solid fa-chart-line text-brand-500 text-xl mb-2"></i>
+                    <div class="font-semibold text-sm">Live Prices</div>
+                    <div class="text-xs text-gray-500">Stock, crypto, currency</div>
                 </button>
-            </div>
-            <div class="p-6 space-y-6">
-                
-                <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
-                    <div class="flex items-center gap-2 mb-2">
-                         <i class="fa-solid fa-shield-halved text-brand-600 dark:text-brand-400"></i>
-                         <h4 class="font-bold text-sm text-brand-900 dark:text-brand-100">Secure Cloud Environment</h4>
-                    </div>
-                    <p class="text-xs text-brand-800 dark:text-brand-200 leading-relaxed">
-                        This application runs via a secure Cloudflare Worker. No API Key is required on your end. All intelligence is routed through encrypted channels.
-                    </p>
-                </div>
-
-                <!-- Model Selection -->
-                <div class="space-y-2">
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider">AI Model (Cloud)</label>
-                    <select id="model-select" class="w-full p-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
-                        <option value="openai/gpt-oss-120b">OpenAI GPT-OSS (Default)</option>
-                        <option value="deepseek/deepseek-r1:free">DeepSeek R1 (Free)</option>
-                        <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash</option>
-                    </select>
-                </div>
-
-                <!-- System Prompt -->
-                <div class="space-y-2">
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider">System Persona</label>
-                    <textarea id="system-prompt" rows="3" class="w-full p-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-lg text-xs leading-relaxed focus:ring-2 focus:ring-brand-500 outline-none resize-none">You are Performance Marketing GPT, an expert in Google Performance Max campaigns, conversion rate optimization, and digital strategy.</textarea>
-                </div>
-                
-                <div class="pt-2">
-                    <button onclick="saveSettings()" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-medium shadow-md transition-colors flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-save"></i> Save Configuration
-                    </button>
-                </div>
+                <button onclick="setInput('Explain quantum computing in simple terms')" class="p-4 bg-white dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-xl hover:border-brand-500 transition-all shadow-sm text-left">
+                    <i class="fa-solid fa-lightbulb text-brand-500 text-xl mb-2"></i>
+                    <div class="font-semibold text-sm">Explain Anything</div>
+                    <div class="text-xs text-gray-500">Simple explanations</div>
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- MAIN JAVASCRIPT LOGIC -->
+    <!-- Input Area -->
+    <div class="bg-white dark:bg-dark-surface border-t border-gray-200 dark:border-dark-border p-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-dark-border rounded-2xl flex items-end p-2 gap-2 focus-within:ring-2 focus-within:ring-brand-500/30 focus-within:border-brand-500 transition-all">
+                <textarea 
+                    id="user-input" 
+                    rows="1" 
+                    class="flex-1 bg-transparent border-none focus:ring-0 text-sm md:text-base py-3 px-2 resize-none max-h-32 placeholder-gray-400 outline-none" 
+                    placeholder="Ask me anything... I can search the internet!"
+                    onkeydown="handleEnter(event)"
+                    oninput="autoResize(this)"
+                ></textarea>
+                <button 
+                    id="send-btn" 
+                    onclick="sendMessage()" 
+                    class="p-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="text-center mt-2">
+                <p class="text-[10px] text-gray-400 dark:text-gray-500">
+                    Powered by Claude AI • Listan Dsouza
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN JAVASCRIPT -->
     <script>
-        // --- CONSTANTS & CONFIG ---
-        const WORKER_ENDPOINT = "https://performance-marketing-api.listandsouza.workers.dev";
-        const DEFAULT_MODEL = "openai/gpt-oss-120b";
-        const API_TIMEOUT_MS = 30000; // 30 seconds
-        
-        const DEFAULT_SYSTEM_PROMPT = "You are Performance Marketing GPT, an elite digital advertising strategist specializing in Google Performance Max (PMax) campaigns. Your goal is to maximize ROAS and Conversions. You speak in a professional, agency-grade tone. You provide actionable, data-driven advice. When asked for ad copy, you strictly adhere to PMax character limits (Headline: 30, Long Headline: 90, Description: 90). You prioritize conversion psychology, audience signals, and asset diversity.";
-        
-        // --- STATE MANAGEMENT ---
-        let state = {
-            chats: [],
-            currentChatId: null,
-            settings: {
-                model: DEFAULT_MODEL,
-                systemPrompt: DEFAULT_SYSTEM_PROMPT,
-                theme: "system"
-            },
-            isTyping: false,
-            currentImage: null
-        };
+        // CONFIGURATION - REPLACE WITH YOUR ACTUAL API KEY
+        const ANTHROPIC_API_KEY = "YOUR_ANTHROPIC_API_KEY_HERE"; // Get from https://console.anthropic.com
+        const API_ENDPOINT = "https://api.anthropic.com/v1/messages";
+        const MODEL = "claude-sonnet-4-20250514";
 
-        // --- DOM ELEMENTS ---
-        const dom = {
-            app: document.getElementById('app'),
-            loading: document.getElementById('loading'),
-            input: document.getElementById('user-input'),
-            chatContainer: document.getElementById('chat-container'),
-            chatList: document.getElementById('chat-history-list'),
-            sidebar: document.getElementById('sidebar'),
-            sidebarOverlay: document.getElementById('sidebar-overlay'),
-            settingsModal: document.getElementById('settings-modal'),
-            settingsContent: document.getElementById('settings-content'),
-            modelSelect: document.getElementById('model-select'),
-            systemPromptInput: document.getElementById('system-prompt'),
-            footerStatus: document.getElementById('footer-status'),
-            welcomeScreen: document.getElementById('welcome-screen'),
-            imagePreviewArea: document.getElementById('image-preview-area'),
-            previewImg: document.getElementById('preview-img')
-        };
+        // STATE
+        let messages = [];
+        let isTyping = false;
 
-        // --- INITIALIZATION ---
-        window.addEventListener('DOMContentLoaded', () => {
-            loadState();
-            applyTheme();
-            initMarkdown();
-            renderChatList();
-            
-            // Check for new user
-            if (state.chats.length === 0) {
-                createNewChat();
-            } else {
-                loadChat(state.chats[0].id);
-            }
+        // DOM ELEMENTS
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const welcome = document.getElementById('welcome');
+        const status = document.getElementById('status');
 
-            // Reveal App
-            setTimeout(() => {
-                dom.loading.style.opacity = '0';
-                dom.app.style.opacity = '1';
-                setTimeout(() => dom.loading.remove(), 500);
-            }, 800);
-        });
+        // INITIALIZE
+        marked.setOptions({ breaks: true, gfm: true });
+        applyTheme();
 
-        function loadState() {
-            const saved = localStorage.getItem('pmgpt_state');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                state = { ...state, ...parsed, isTyping: false }; // Reset transient state
-            }
-            // Populate settings UI
-            dom.modelSelect.value = state.settings.model;
-            dom.systemPromptInput.value = state.settings.systemPrompt || DEFAULT_SYSTEM_PROMPT;
-        }
-
-        function saveData() {
-            localStorage.setItem('pmgpt_state', JSON.stringify({
-                chats: state.chats,
-                currentChatId: state.currentChatId,
-                settings: state.settings
-            }));
-        }
-
-        function initMarkdown() {
-            marked.setOptions({
-                breaks: true,
-                gfm: true,
-                highlight: function(code, lang) {
-                    return code; // Simple return, logic handled by CSS
-                }
-            });
-        }
-
-        // --- THEME & UI ---
+        // THEME TOGGLE
         function toggleTheme() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                state.settings.theme = 'light';
-                document.getElementById('theme-icon').className = 'fa-solid fa-moon';
-            } else {
-                document.documentElement.classList.add('dark');
-                state.settings.theme = 'dark';
-                document.getElementById('theme-icon').className = 'fa-solid fa-sun';
-            }
-            saveData();
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            document.getElementById('theme-icon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
 
         function applyTheme() {
-            const isDark = state.settings.theme === 'dark' || 
-                          (state.settings.theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            if (isDark) {
+            const saved = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (saved === 'dark' || (!saved && prefersDark)) {
                 document.documentElement.classList.add('dark');
                 document.getElementById('theme-icon').className = 'fa-solid fa-sun';
             }
         }
 
-        function toggleSidebar() {
-            dom.sidebar.classList.toggle('-translate-x-full');
-            dom.sidebarOverlay.classList.toggle('hidden');
-        }
-
+        // AUTO RESIZE TEXTAREA
         function autoResize(textarea) {
             textarea.style.height = 'auto';
             textarea.style.height = textarea.scrollHeight + 'px';
         }
 
-        // --- CHAT LOGIC ---
-        function createNewChat() {
-            const newChat = {
-                id: Date.now().toString(),
-                title: "New Strategy",
-                messages: [],
-                timestamp: Date.now()
-            };
-            state.chats.unshift(newChat);
-            state.currentChatId = newChat.id;
-            saveData();
-            renderChatList();
-            renderMessages();
-            if(window.innerWidth < 768) toggleSidebar(); // Close sidebar on mobile
-        }
-
-        function loadChat(id) {
-            state.currentChatId = id;
-            saveData();
-            renderChatList();
-            renderMessages();
-            if(window.innerWidth < 768 && !dom.sidebar.classList.contains('-translate-x-full')) toggleSidebar();
-        }
-
-        function deleteChat(e, id) {
-            e.stopPropagation();
-            if(confirm("Delete this campaign history?")) {
-                state.chats = state.chats.filter(c => c.id !== id);
-                if(state.chats.length === 0) createNewChat();
-                else if(state.currentChatId === id) loadChat(state.chats[0].id);
-                else {
-                    saveData();
-                    renderChatList();
-                }
-            }
-        }
-
-        function renderChatList() {
-            dom.chatList.innerHTML = state.chats.map(chat => `
-                <div onclick="loadChat('${chat.id}')" class="group flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all ${chat.id === state.currentChatId ? 'bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800' : 'hover:bg-gray-100 dark:hover:bg-slate-800 border border-transparent'}">
-                    <div class="flex items-center gap-3 overflow-hidden">
-                        <i class="fa-regular fa-message text-xs ${chat.id === state.currentChatId ? 'text-brand-600 dark:text-brand-400' : 'text-gray-400'}"></i>
-                        <span class="text-sm font-medium truncate ${chat.id === state.currentChatId ? 'text-brand-900 dark:text-brand-100' : 'text-gray-600 dark:text-gray-400'}">${chat.title}</span>
-                    </div>
-                    <button onclick="deleteChat(event, '${chat.id}')" class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-opacity p-1">
-                        <i class="fa-solid fa-trash text-xs"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function renderMessages() {
-            const chat = state.chats.find(c => c.id === state.currentChatId);
-            if (!chat) return;
-
-            document.getElementById('current-chat-title').innerText = chat.title;
-            
-            if (chat.messages.length === 0) {
-                dom.welcomeScreen.style.display = 'flex';
-                dom.chatContainer.innerHTML = '';
-                dom.chatContainer.appendChild(dom.welcomeScreen);
-            } else {
-                dom.welcomeScreen.style.display = 'none';
-                dom.chatContainer.innerHTML = chat.messages.map(msg => `
-                    <div class="flex w-full ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in mb-6">
-                        <div class="flex max-w-[90%] md:max-w-[80%] gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}">
-                            <!-- Avatar -->
-                            <div class="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center text-xs ${msg.role === 'user' ? 'bg-gray-200 dark:bg-slate-700 text-gray-600' : 'bg-gradient-to-br from-brand-500 to-indigo-600 text-white shadow-md'}">
-                                <i class="fa-solid ${msg.role === 'user' ? 'fa-user' : 'fa-robot'}"></i>
-                            </div>
-                            
-                            <!-- Bubble -->
-                            <div class="flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}">
-                                <div class="prose dark:prose-invert max-w-none text-sm md:text-base bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-border ${msg.role === 'user' ? 'rounded-tr-sm bg-brand-50/50 dark:bg-brand-900/10' : 'rounded-tl-sm'}">
-                                    ${msg.image ? `<img src="${msg.image}" class="max-w-full h-auto rounded-lg mb-2 border border-gray-200 dark:border-dark-border" />` : ''}
-                                    ${marked.parse(msg.content)}
-                                </div>
-                                <span class="text-[10px] text-gray-400 mt-1 px-1">${new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-                scrollToBottom();
-            }
-        }
-
-        function scrollToBottom() {
-            dom.chatContainer.scrollTop = dom.chatContainer.scrollHeight;
-        }
-
-        function setInput(text) {
-            dom.input.value = text;
-            autoResize(dom.input);
-            dom.input.focus();
-        }
-
+        // HANDLE ENTER KEY
         function handleEnter(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 sendMessage();
             }
         }
-        
-        // Keyboard Navigation Support
-        window.addEventListener('keydown', (e) => {
-            // ESC to close modals
-            if (e.key === 'Escape') {
-                if (!dom.settingsModal.classList.contains('hidden')) {
-                    closeSettings();
-                }
-                if (!dom.sidebar.classList.contains('-translate-x-full') && window.innerWidth < 768) {
-                    toggleSidebar();
-                }
-            }
-            
-            // Ctrl/Cmd + N for new chat
-            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
-                e.preventDefault();
-                createNewChat();
-            }
-            
-            // Ctrl/Cmd + / to focus input
-            if ((e.ctrlKey || e.metaKey) && e.key === '/') {
-                e.preventDefault();
-                dom.input.focus();
-            }
-        });
 
-        // --- IMAGE HANDLING ---
-        function handleImageUpload(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    state.currentImage = e.target.result;
-                    dom.previewImg.src = state.currentImage;
-                    dom.imagePreviewArea.classList.remove('hidden');
-                }
-                reader.readAsDataURL(input.files[0]);
+        // SET INPUT (from quick actions)
+        function setInput(text) {
+            userInput.value = text;
+            autoResize(userInput);
+            userInput.focus();
+        }
+
+        // CLEAR CHAT
+        function clearChat() {
+            if (confirm('Clear all messages?')) {
+                messages = [];
+                chatContainer.innerHTML = '';
+                chatContainer.appendChild(welcome);
+                welcome.style.display = 'flex';
             }
         }
 
-        function clearImage() {
-            state.currentImage = null;
-            document.getElementById('image-upload').value = '';
-            dom.imagePreviewArea.classList.add('hidden');
+        // SCROLL TO BOTTOM
+        function scrollToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
-        // --- CORE AI LOGIC ---
-
-        async function sendMessage() {
-            if (state.isTyping) return;
-            const text = dom.input.value.trim();
-            const image = state.currentImage;
-
-            if (!text && !image) return;
-
-            // 1. Add User Message
-            const chat = state.chats.find(c => c.id === state.currentChatId);
-            chat.messages.push({
-                role: 'user',
-                content: text,
-                image: image,
-                timestamp: Date.now()
-            });
-
-            // Update title if first message
-            if (chat.messages.length === 1) {
-                chat.title = text.slice(0, 30) + (text.length > 30 ? '...' : '');
-            }
-
-            // Clear input
-            dom.input.value = '';
-            dom.input.style.height = 'auto';
-            clearImage();
-            renderMessages();
-            saveData();
-            renderChatList();
-
-            // 2. Prepare AI Response
-            state.isTyping = true;
+        // ADD MESSAGE TO UI
+        function addMessage(role, content, typing = false) {
+            welcome.style.display = 'none';
             
-            // Create Placeholder for Streaming/Typing
-            const tempId = 'msg-' + Date.now();
-            const aiBubble = createAiBubble(tempId);
-            dom.chatContainer.appendChild(aiBubble);
-            scrollToBottom();
-            const contentDiv = document.getElementById(tempId);
-
-            try {
-                // Determine Intent and Check for Clarification
-                const intent = classifyIntent(text);
-                const clarification = autoClarify(text, intent);
-                
-                let responseText = "";
-
-                if (clarification) {
-                    // Return clarification immediately without API call
-                    responseText = clarification;
-                    await typeTextEffect(contentDiv, responseText);
-                } else {
-                    // Try Fetching from Worker (Pro Mode by default)
-                    try {
-                        // Update footer status
-                        dom.footerStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connecting to cloud intelligence...';
-                        
-                        responseText = await fetchWorker(chat.messages, intent);
-                        
-                        // Reset footer status
-                        dom.footerStatus.innerHTML = '<i class="fa-solid fa-shield-halved text-xs"></i> <span>Cloudflare Secured • Hybrid Intelligence</span>';
-                        
-                         // Simulate typing effect for the received text if it's too fast, 
-                         // or just render it. For smoother UX, let's type it.
-                        await typeTextEffect(contentDiv, responseText);
-                    } catch (err) {
-                        console.error("Worker Failed, falling back", err);
-                        
-                        // Update footer to show offline mode
-                        dom.footerStatus.innerHTML = '<i class="fa-solid fa-circle-exclamation text-yellow-500"></i> <span>Offline Mode Active</span>';
-                        
-                        // Fallback to Offline Logic
-                        const fallbackText = generateNormalResponse(text, image);
-                        responseText = fallbackText + "\n\n_⚠️ Note: Cloud connection unavailable. Using offline guidance mode._";
-                        await typeTextEffect(contentDiv, responseText);
-                        
-                        // Reset footer after 5 seconds
-                        setTimeout(() => {
-                            dom.footerStatus.innerHTML = '<i class="fa-solid fa-shield-halved text-xs"></i> <span>Cloudflare Secured • Hybrid Intelligence</span>';
-                        }, 5000);
-                    }
-                }
-
-                // 3. Save AI Message
-                chat.messages.push({
-                    role: 'assistant',
-                    content: responseText,
-                    timestamp: Date.now()
-                });
-                
-                // Final Render
-                renderMessages(); 
-                saveData();
-
-            } catch (error) {
-                contentDiv.innerHTML = "Error generating response.";
-                console.error(error);
-            } finally {
-                state.isTyping = false;
-            }
-        }
-
-        function createAiBubble(id) {
-            const div = document.createElement('div');
-            div.className = "flex w-full justify-start animate-fade-in mb-6";
-            div.innerHTML = `
-                <div class="flex max-w-[90%] md:max-w-[80%] gap-3 flex-row">
-                    <div class="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center text-xs bg-gradient-to-br from-brand-500 to-indigo-600 text-white shadow-md">
-                        <i class="fa-solid fa-robot"></i>
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex w-full ${role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`;
+            
+            messageDiv.innerHTML = `
+                <div class="flex max-w-[85%] md:max-w-[75%] gap-3 ${role === 'user' ? 'flex-row-reverse' : 'flex-row'}">
+                    <div class="w-9 h-9 rounded-lg shrink-0 flex items-center justify-center text-sm ${
+                        role === 'user' 
+                            ? 'bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-gray-300' 
+                            : 'bg-gradient-to-br from-brand-500 to-indigo-600 text-white shadow-md'
+                    }">
+                        <i class="fa-solid ${role === 'user' ? 'fa-user' : 'fa-robot'}"></i>
                     </div>
-                    <div class="flex flex-col items-start">
-                        <div id="${id}" class="prose dark:prose-invert max-w-none text-sm md:text-base bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-border rounded-tl-sm typing-cursor min-h-[40px]"></div>
+                    <div class="flex flex-col ${role === 'user' ? 'items-end' : 'items-start'}">
+                        <div class="prose dark:prose-invert max-w-none text-sm md:text-base bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-border ${
+                            role === 'user' ? 'rounded-tr-sm bg-brand-50/30 dark:bg-brand-900/10' : 'rounded-tl-sm'
+                        }">
+                            ${typing ? '<div class="typing-indicator"><span></span><span></span><span></span></div>' : marked.parse(content)}
+                        </div>
+                        <span class="text-[10px] text-gray-400 mt-1 px-1">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                     </div>
                 </div>
             `;
-            return div;
+            
+            chatContainer.appendChild(messageDiv);
+            scrollToBottom();
+            return messageDiv;
         }
 
-        // --- CLOUDFLARE WORKER INTEGRATION ---
-        async function fetchWorker(messages, intent) {
-            // Prepare messages, removing any local-only typing flags if they existed
-            // Also inject the specific system prompt for the intent
-            const apiMessages = [
-                { role: "system", content: `You are a ${intent} expert. ${state.settings.systemPrompt}` },
-                ...messages.map(m => ({
-                    role: m.role,
-                    content: m.image ? [
-                        { type: "text", text: m.content },
-                        { type: "image_url", image_url: { url: m.image } }
-                    ] : m.content
-                }))
-            ];
+        // UPDATE STATUS
+        function setStatus(text, type = 'info') {
+            const colors = {
+                info: 'text-blue-500',
+                success: 'text-green-500',
+                error: 'text-red-500',
+                warning: 'text-yellow-500'
+            };
+            status.innerHTML = `<i class="fa-solid fa-circle ${colors[type]} text-[6px]"></i> ${text}`;
+        }
 
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+        // SEND MESSAGE
+        async function sendMessage() {
+            if (isTyping) return;
+            
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            // Validate API key
+            if (!ANTHROPIC_API_KEY || ANTHROPIC_API_KEY === "YOUR_ANTHROPIC_API_KEY_HERE") {
+                alert('⚠️ Please add your Anthropic API key in the script!\n\nGet it from: https://console.anthropic.com/settings/keys');
+                return;
+            }
+
+            // Add user message
+            messages.push({ role: "user", content: text });
+            addMessage('user', text);
+            
+            userInput.value = '';
+            userInput.style.height = 'auto';
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+            isTyping = true;
+
+            // Add typing indicator
+            const typingMsg = addMessage('assistant', '', true);
+            setStatus('Thinking and searching...', 'info');
 
             try {
-                const response = await fetch(WORKER_ENDPOINT, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                // Call Anthropic API with web search enabled
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': ANTHROPIC_API_KEY,
+                        'anthropic-version': '2023-06-01'
+                    },
                     body: JSON.stringify({
-                        model: state.settings.model,
-                        messages: apiMessages
-                    }),
-                    signal: controller.signal
+                        model: MODEL,
+                        max_tokens: 4096,
+                        messages: messages,
+                        tools: [
+                            {
+                                type: "web_search_20250305",
+                                name: "web_search"
+                            }
+                        ]
+                    })
                 });
 
-                clearTimeout(timeoutId);
-
                 if (!response.ok) {
-                    // Log technical details for debugging
-                    console.error('API Error:', response.status, response.statusText);
-                    throw new Error('Unable to connect to the service. Please try again.');
+                    const error = await response.json();
+                    throw new Error(error.error?.message || `API Error: ${response.status}`);
                 }
 
                 const data = await response.json();
                 
-                if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-                    console.error('Invalid API response format:', data);
-                    throw new Error('Received unexpected response format. Please try again.');
-                }
-                
-                return data.choices[0].message.content;
-            } catch (error) {
-                clearTimeout(timeoutId);
-                if (error.name === 'AbortError') {
-                    throw new Error('Request timeout after 30 seconds - please check your connection and try again');
-                }
-                throw error;
-            }
-        }
-
-        // --- INTENT & CLARIFICATION ---
-        function classifyIntent(text) {
-            const lower = text.toLowerCase();
-            if (lower.includes('pmax') || lower.includes('performance max')) return 'Performance Max';
-            if (lower.includes('meta ads') || lower.includes('facebook ads') || lower.includes('instagram ads')) return 'Meta Ads';
-            if (lower.includes('google ads') || lower.includes('search ads') || lower.includes('display')) return 'Google Ads';
-            if (lower.includes('seo') || lower.includes('organic') || lower.includes('search engine')) return 'SEO';
-            if (lower.includes('cro') || lower.includes('conversion rate') || lower.includes('landing page')) return 'CRO';
-            if (lower.includes('tiktok') || lower.includes('tik tok')) return 'TikTok Ads';
-            if (lower.includes('linkedin') || lower.includes('b2b')) return 'LinkedIn Ads';
-            return 'Digital Marketing Strategy';
-        }
-
-        function autoClarify(text, intent) {
-            const lower = text.toLowerCase();
-            
-            // Check for missing budget in PMax context
-            if (intent === "Performance Max" && !lower.match(/\d|\$|budget/)) {
-                return "Before we build your campaign structure, what is your **daily budget** and **target CPA/ROAS**?";
-            }
-            
-            // Check for missing platform in Meta Ads
-            if (intent === "Meta Ads" && !lower.includes("budget") && !lower.includes("audience")) {
-                return "For Meta campaigns, I need to know: What's your **daily budget**, **target audience demographics**, and **campaign objective** (conversions, traffic, awareness)?";
-            }
-            
-            // Check for missing context in SEO
-            if (intent === "SEO" && !lower.includes("site") && !lower.includes("website") && !lower.includes("url")) {
-                return "To give you the best SEO advice, which **website or niche** are we analyzing?";
-            }
-            
-            // Check for missing traffic data in CRO
-            if (intent === "CRO" && !lower.includes("traffic") && !lower.includes("visitor") && !lower.includes("conversion")) {
-                return "Conversion optimization depends on data. What is your **monthly traffic volume** and **current conversion rate**?";
-            }
-            
-            // Check for TikTok specifics
-            if (intent === "TikTok Ads" && !lower.includes("creative") && !lower.includes("video")) {
-                return "TikTok is all about creative. Are you planning **UGC-style content** or **polished brand videos**? What's your target age group?";
-            }
-            
-            // Check for LinkedIn B2B context
-            if (intent === "LinkedIn Ads" && !lower.includes("industry") && !lower.includes("job title")) {
-                return "For B2B LinkedIn campaigns, what's your **target industry** and **job titles/seniority levels** you want to reach?";
-            }
-
-            return null;
-        }
-
-        // --- OFFLINE FALLBACK ENGINE ---
-        function generateNormalResponse(input, image) {
-            const intent = classifyIntent(input);
-            const lower = input.toLowerCase();
-
-            // 1. Image Handling (Comprehensive Analysis)
-            if (image) {
-                return `### 🖼️ Creative Asset Analysis
-I've analyzed your creative asset. Here's a comprehensive performance checklist:
-
-**Visual Performance Audit:**
-* ✓ **Clear Focal Point:** Is the main product/offer the immediate focus?
-* ✓ **Text Contrast:** Does headline text have at least 4.5:1 contrast ratio?
-* ✓ **Branding Visibility:** Logo should occupy 8-12% of image area (not too small/large)
-* ✓ **Safe Zones:** Keep critical elements 15% away from edges (PMax auto-crops)
-* ✓ **Color Psychology:** Does color scheme match campaign emotion (urgency=red/orange, trust=blue)?
-* ✓ **Mobile Optimization:** Key elements visible at 320px width?
-
-**Platform-Specific Recommendations:**
-${intent === 'Meta Ads' ? `
-**Meta Ads Optimization:**
-- Keep text overlay under 20% of image area
-- Use 1:1 (square) format for feed, 9:16 for stories
-- Include faces for 30% higher engagement
-- CTA button should be high-contrast color
-` : intent === 'Performance Max' ? `
-**PMax Optimization:**
-- Use landscape (1.91:1) and square (1:1) ratios
-- Avoid borders/frames (reduces deliverability)
-- Product should fill 60-70% of frame
-- High resolution: min 600x600px
-` : `
-**General Optimization:**
-- Test with and without text overlay
-- A/B test different color schemes
-- Ensure fast load time (<100KB for images)
-`}
-
-**Improvement Suggestions:**
-1. **CTA Placement:** Position call-to-action in bottom 25% of image
-2. **Visual Hierarchy:** Use size/color to guide eye flow: Product → Benefit → CTA
-3. **A/B Testing:** Create 3 variants with different backgrounds/colors`;
-            }
-
-            // 2. Intent-Based Routing
-            if (intent === 'Meta Ads') {
-                return `### 📱 Meta Ads Strategy Framework
-
-**Campaign Structure Best Practices:**
-* **Campaign Budget Optimization (CBO):** Let Meta distribute budget across ad sets
-* **Ad Set Segmentation:** Separate by broad audience themes, not micro-targeting
-* **Creative Testing:** 3-5 creatives per ad set, each with unique hook
-
-**Targeting for ${new Date().getFullYear()}:**
-* **Advantage+ Audiences:** Use broad targeting with conversion history
-* **Lookalike Audiences:** 1-3% of purchasers (not just visitors)
-* **Interest Stacking:** Combine 3-4 related interests, not single interests
-
-**Creative Framework:**
-* **Hook (First 3 sec):** Pattern interrupt or bold claim
-* **Body:** Problem → Solution → Social Proof
-* **CTA:** Direct and urgent ("Get 20% Off Today")
-
-**Metrics to Watch:**
-* CTR > 2% (good), >3% (excellent)
-* CPM: Benchmark $10-15 for feed, $5-8 for stories
-* ROAS Target: 3x+ for ecom, 5x+ for subscription`;
-            }
-
-            if (intent === 'SEO') {
-                return `### 🔍 SEO & Organic Synergy
-While I specialize in Paid Media, SEO creates the foundation for efficient PMax performance.
-
-**SEO/PMax Integration Strategy:**
-* **Keyword Alignment:** Your organic H1/Title tags should match PMax search themes
-* **Landing Page Quality:** Google uses LP experience for Ad Rank in PMax
-* **Content Mapping:** Create supporting blog content for commercial keywords
-
-**Technical SEO Priorities:**
-1. **Core Web Vitals:** LCP <2.5s, FID <100ms, CLS <0.1
-2. **Mobile-First:** 60%+ of searches are mobile
-3. **Schema Markup:** Product schema increases SERP CTR by 30%
-
-**On-Page Checklist:**
-* Title Tag: 55-60 chars, keyword in first 5 words
-* Meta Description: 155 chars, include benefit + CTA
-* H1: One per page, include primary keyword
-* Image Alt Text: Descriptive + keyword variation`;
-            }
-
-            if (intent === 'CRO') {
-                return `### 📈 Conversion Rate Optimization Framework
-
-**The CRO Force Multiplier:**
-Doubling your conversion rate = doubling your ROAS without increasing spend.
-
-**High-Impact CRO Tests (Priority Order):**
-
-1. **Above-the-Fold Value Prop** (30% avg lift)
-   - Headline: Specific benefit in <10 words
-   - Subheadline: Address main objection
-   - Hero CTA: Contrasting color, action-oriented copy
-
-2. **Load Speed Optimization** (20% avg lift)
-   - Target: <2.5s LCP on mobile
-   - Tools: Compress images, lazy load, CDN
-   - Impact: 1-second delay = 7% conversion drop
-
-3. **Social Proof Placement** (15% avg lift)
-   - Show reviews/testimonials near CTA
-   - Use specific numbers: "12,847 customers"
-   - Video testimonials outperform text by 2x
-
-4. **Form Optimization** (25% avg lift)
-   - Reduce fields: Each removed field = 5-10% lift
-   - Multi-step forms: Convert 15-20% better
-   - Remove "optional" labels (creates confusion)
-
-**Testing Framework:**
-* Run tests for 2 weeks minimum OR 200+ conversions
-* Test one element at a time (isolate variables)
-* Prioritize: Header → CTA → Forms → Trust signals`;
-            }
-            
-            if (intent === 'TikTok Ads') {
-                return `### 🎵 TikTok Ads Strategy
-
-**The TikTok Success Formula:**
-Native > Polished. Authenticity > Production value.
-
-**Creative Principles:**
-* **Hook in 1 Second:** Movement, bold text, or pattern interrupt
-* **UGC Style:** Raw, handheld footage outperforms professional shoots
-* **Trend Integration:** Use trending sounds/effects (check TikTok Creative Center)
-
-**Campaign Structure:**
-* Start with broad targeting (interests + demographics only)
-* Let algorithm optimize after 50 conversions
-* Budget: Minimum $20/day per ad group
-
-**Metrics Benchmarks:**
-* CTR: >2.5% (feed), >1.5% (discovery)
-* Video Completion: >50%
-* CPM: $5-10 (highly variable by niche)`;
-            }
-            
-            if (intent === 'LinkedIn Ads') {
-                return `### 💼 LinkedIn B2B Advertising Strategy
-
-**B2B Campaign Framework:**
-* **Objective Selection:** Lead Gen Forms > Website Conversions (70% higher CVR)
-* **Targeting Precision:** Company size + Job function + Seniority
-* **Budget Reality:** CPCs typically $8-15 (3x higher than Meta/Google)
-
-**Creative Best Practices:**
-* **Format:** Single Image Ads (most cost-efficient)
-* **Copy:** Professional but conversational, not corporate-speak
-* **Value Prop:** Lead with business outcome, not features
-
-**Funnel Strategy:**
-1. **Cold Audience:** Thought leadership content, industry reports
-2. **Warm (retargeting):** Case studies, product demos
-3. **Hot:** Free trial, consultation booking
-
-**ROI Expectations:**
-* Lead cost: $50-150 (acceptable for B2B)
-* Focus on lead quality over volume
-* Track SQL conversion rate, not just MQL`;
-            }
-
-            // Default PMax Logic
-            if (lower.includes('headline') || lower.includes('copy')) {
-                return `### ✍️ Performance Max Ad Copy Framework
-
-**Headlines (30 char max):**
-1. [Benefit] + [Product Name]
-   - Example: "Premium Coffee, Fresh Daily"
-2. [Sale/Offer] + [Urgency]
-   - Example: "Save 30% - Ends Monday"
-3. [Social Proof] + [Category]
-   - Example: "5-Star Rated Ergonomic Desk"
-4. [Question] + [Solution]
-   - Example: "Tired? Try Natural Energy"
-
-**Long Headlines (90 char max):**
-1. [Problem] + [Solution] + [Benefit]
-   - Example: "Can't sleep? Our memory foam pillow provides perfect neck support for deeper rest."
-2. [Unique Selling Prop] + [Social Proof]
-   - Example: "Handcrafted leather bags loved by 50K+ customers. Free shipping & lifetime warranty."
-
-**Descriptions (90 char max):**
-1. [Expand Benefit] + [CTA]
-   - Example: "Designed for busy professionals. Order now and get same-day shipping."
-2. [Overcome Objection] + [Guarantee]
-   - Example: "Not sure about the fit? Try risk-free with our 60-day return policy."
-
-**Copy Principles:**
-* Use numbers/specifics over vague claims
-* Include one keyword variation per headline
-* Test emotional (fear, desire) vs rational (ROI, efficiency) angles`;
-            }
-
-            return `### 🚀 Performance Max Strategy Framework
-
-**The 5 Pillars of PMax Success:**
-
-**1. Feed Health (30% of Performance)**
-* Your Shopping Feed (GMC) determines 80% of search targeting
-* Optimize: Title (front-load keywords), Description (benefits), GTINs (mandatory for brand products)
-* Error-Free: Fix all GMC disapprovals before launching campaigns
-
-**2. Asset Group Strategy (25% of Performance)**
-* **DON'T:** Put all products in one asset group
-* **DO:** Segment by margin tier, product category, or seasonality
-* **Best Practice:** 3-5 asset groups per campaign, each with unique assets
-
-**3. Audience Signals (20% of Performance)**
-* Signals ≠ Targeting (they guide, not restrict)
-* Layer 3 types: Custom Intent (keywords), Interests, Demographics
-* Use your CRM data for Customer Match lists
-
-**4. Creative Asset Diversity (15% of Performance)**
-* Minimum: 4 images (landscape + square), 1 video, 5 headlines, 4 descriptions
-* Optimal: 15 images, 5 videos, 15 headlines, 5 descriptions
-* Test lifestyle shots vs product-only (lifestyle typically wins)
-
-**5. Budget & Bidding (10% of Performance)**
-* Start: **Maximize Conversions** (no target) for 2-4 weeks
-* Scale: Switch to **tROAS** once hitting 30+ conversions/month
-* Budget: 10x your target CPA minimum (Google's recommendation)
-
-**Success Metrics:**
-* Week 1-2: Learning phase (expect high CPA)
-* Week 3-4: Stabilization (CPA normalizes)
-* Week 5+: Optimization (scale if ROAS ≥ target)`;
-        }
-
-        // --- UTILS ---
-        function typeTextEffect(element, text) {
-            return new Promise(resolve => {
-                let i = 0;
-                element.innerHTML = '';
-                const speed = 10; // ms per char
-
-                function type() {
-                    if (i < text.length) {
-                        const current = text.substring(0, i + 1);
-                        element.innerHTML = marked.parse(current);
-                        i++;
-                        setTimeout(type, speed);
-                    } else {
-                        element.classList.remove('typing-cursor');
-                        resolve();
+                // Extract assistant response
+                let assistantText = '';
+                for (const block of data.content) {
+                    if (block.type === 'text') {
+                        assistantText += block.text;
                     }
                 }
-                type();
-            });
+
+                if (!assistantText) {
+                    assistantText = "I couldn't generate a response. Please try again.";
+                }
+
+                // Remove typing indicator
+                typingMsg.remove();
+
+                // Add assistant message
+                messages.push({ role: "assistant", content: assistantText });
+                addMessage('assistant', assistantText);
+                
+                setStatus('Online • Real-time Internet Access', 'success');
+
+            } catch (error) {
+                console.error('Error:', error);
+                typingMsg.remove();
+                
+                const errorMsg = error.message.includes('API')
+                    ? `API Error: ${error.message}\n\n**Tip:** Make sure your API key is valid and has credits.`
+                    : `Error: ${error.message}\n\nPlease check your internet connection and try again.`;
+                
+                addMessage('assistant', errorMsg);
+                setStatus('Error occurred', 'error');
+            } finally {
+                userInput.disabled = false;
+                sendBtn.disabled = false;
+                isTyping = false;
+                userInput.focus();
+            }
         }
 
-        // --- UI TOGGLES ---
-        function openSettings() {
-            dom.settingsModal.classList.remove('hidden');
-            setTimeout(() => {
-                dom.settingsContent.classList.remove('scale-95', 'opacity-0');
-                dom.settingsContent.classList.add('scale-100', 'opacity-100');
-            }, 10);
-            if(window.innerWidth < 768) toggleSidebar();
-        }
-
-        function closeSettings() {
-            dom.settingsContent.classList.remove('scale-100', 'opacity-100');
-            dom.settingsContent.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                dom.settingsModal.classList.add('hidden');
-            }, 300);
-        }
-
-        function saveSettings() {
-            state.settings.model = dom.modelSelect.value;
-            state.settings.systemPrompt = dom.systemPromptInput.value.trim();
-            saveData();
-            closeSettings();
-        }
-
+        // Focus input on load
+        window.addEventListener('load', () => {
+            userInput.focus();
+        });
     </script>
 </body>
 </html>
