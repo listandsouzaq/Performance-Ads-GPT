@@ -1,200 +1,825 @@
 <!DOCTYPE html>
 <html lang="en" class="antialiased">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Performance Marketing GPT | PMax Specialist</title>
-  <meta name="description" content="AI-powered performance marketing reasoning engine." />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Performance Marketing GPT | PMax Specialist</title>
+    <meta name="description" content="AI-powered Performance Max advertising assistant. Powered by Listan Dsouza.">
 
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        },
+                        dark: {
+                            bg: '#0f172a',
+                            surface: '#1e293b',
+                            border: '#334155'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 
-  <!-- Markdown -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <style>
-    body { font-family: system-ui, sans-serif; }
-    .typing::after {
-      content: "▋";
-      animation: blink 1s infinite;
-      margin-left: 2px;
-    }
-    @keyframes blink { 50% { opacity: 0; } }
-  </style>
+    <!-- Marked.js for Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Prose Markdown Styling */
+        .prose p { margin-bottom: 1rem; line-height: 1.6; }
+        .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .prose ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .prose h1, .prose h2, .prose h3 { font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; color: inherit; }
+        .prose code { background: rgba(0,0,0,0.1); padding: 0.2rem 0.4rem; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.875em; }
+        .dark .prose code { background: rgba(255,255,255,0.1); color: #e2e8f0; }
+        .prose pre { background: #1e293b; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-bottom: 1rem; color: #f8fafc; }
+        .prose pre code { background: transparent; padding: 0; color: inherit; }
+        .prose blockquote { border-left: 4px solid #0ea5e9; padding-left: 1rem; font-style: italic; opacity: 0.8; }
+        .prose table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+        .prose th, .prose td { border: 1px solid #e2e8f0; padding: 0.5rem; text-align: left; }
+        .dark .prose th, .dark .prose td { border-color: #334155; }
+
+        /* Typing Cursor */
+        .typing-cursor::after {
+            content: '▋';
+            animation: blink 1s step-start infinite;
+            color: #0ea5e9;
+            margin-left: 2px;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Loader */
+        #loading {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0f172a; z-index: 9999; display: flex;
+            justify-content: center; align-items: center; color: white;
+            flex-direction: column; transition: opacity 0.5s ease;
+        }
+        .loader-spinner {
+            width: 40px; height: 40px; border: 4px solid #334155;
+            border-top: 4px solid #0ea5e9; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 1rem;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Animated Background */
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+        }
+        .dark .bg-grid {
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+        }
+    </style>
 </head>
+<body class="bg-gray-50 dark:bg-dark-bg text-gray-900 dark:text-gray-100 font-sans transition-colors duration-200 overflow-hidden h-[100dvh] flex flex-col">
 
-<body class="bg-gray-100 dark:bg-slate-900 text-gray-900 dark:text-gray-100">
-
-<!-- Loader -->
-<div id="loading" class="h-screen flex items-center justify-center text-sm">
-  Initializing Performance Engine…
-</div>
-
-<!-- App -->
-<div id="app" class="max-w-4xl mx-auto p-4 opacity-0">
-
-  <!-- Header -->
-  <div class="flex justify-between items-center mb-4">
-    <h1 class="font-bold text-lg">Performance Marketing GPT</h1>
-    <button onclick="toggleTheme()" class="text-xs opacity-70">Toggle Theme</button>
-  </div>
-
-  <!-- Chat -->
-  <div id="chat" class="min-h-[300px] mb-4"></div>
-
-  <!-- Input -->
-  <textarea id="input"
-    class="w-full p-3 rounded-lg border dark:bg-slate-800"
-    placeholder="Ask about PMax, ROAS, SEO, CRO, budgets, scaling…"
-    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}">
-  </textarea>
-
-  <!-- Watermark -->
-  <div class="text-center text-xs opacity-40 mt-6">
-    Powered by Listan Dsouza
-  </div>
-</div>
-
-<script>
-/* ================= CONFIG ================= */
-const WORKER_ENDPOINT =
-  "https://performance-marketing-api.listandsouza.workers.dev";
-const MODEL = "openai/gpt-oss-120b";
-
-/* ================= STATE ================= */
-const state = {
-  messages: [],
-  isTyping: false
-};
-
-/* ================= INIT ================= */
-window.onload = () => {
-  marked.setOptions({ breaks: true });
-  document.getElementById("loading").remove();
-  document.getElementById("app").style.opacity = "1";
-};
-
-/* ================= SEND ================= */
-async function sendMessage() {
-  if (state.isTyping) return;
-
-  const input = document.getElementById("input");
-  const text = input.value.trim();
-  if (!text) return;
-
-  input.value = "";
-  state.messages.push({ role: "user", content: text });
-  render();
-
-  state.isTyping = true;
-  appendThinking();
-
-  try {
-    const intent = classifyIntent(text);
-    const clarify = autoClarify(text, intent);
-
-    let reply;
-    if (clarify) {
-      reply = clarify;
-    } else {
-      reply = await callWorker(state.messages, intent);
-    }
-
-    state.messages.push({ role: "assistant", content: reply });
-  } catch (e) {
-    state.messages.push({
-      role: "assistant",
-      content: offlineLogic(text)
-    });
-  }
-
-  state.isTyping = false;
-  render();
-}
-
-/* ================= WORKER ================= */
-async function callWorker(messages, intent) {
-  const res = await fetch(WORKER_ENDPOINT, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: MODEL,
-      messages: [
-        {
-          role: "system",
-          content:
-            `You are a ${intent} expert. Answer logically, step-by-step, using real-world marketing reasoning.`
-        },
-        ...messages
-      ]
-    })
-  });
-
-  if (!res.ok) throw new Error("Worker failed");
-  const data = await res.json();
-  return data.choices[0].message.content;
-}
-
-/* ================= INTENT ================= */
-function classifyIntent(q) {
-  q = q.toLowerCase();
-  if (q.includes("pmax")) return "Performance Max";
-  if (q.includes("seo")) return "SEO";
-  if (q.includes("cro") || q.includes("conversion")) return "CRO";
-  return "Marketing Strategy";
-}
-
-/* ================= CLARIFY ================= */
-function autoClarify(q, intent) {
-  if (intent === "Performance Max" && !q.match(/\d|\$/))
-    return "Before optimizing PMax, what is your **daily budget and target CPA**?";
-  if (intent === "SEO" && !q.includes("site"))
-    return "Which **website or niche** are you optimizing for SEO?";
-  if (intent === "CRO" && !q.includes("traffic"))
-    return "What is your **monthly traffic and current conversion rate**?";
-  return null;
-}
-
-/* ================= OFFLINE ================= */
-function offlineLogic(q) {
-  q = q.toLowerCase();
-  if (q.includes("roas"))
-    return "ROAS drops when traffic quality, offer, or conversion rate breaks. Fix landing page before bids.";
-  if (q.includes("budget"))
-    return "Daily budget should be 3–5× CPA. Never scale more than 20% per day.";
-  if (q.includes("headline"))
-    return "High-performing headlines = Outcome + Urgency + Clarity.";
-  return "Strong marketing decisions come from correct assumptions, not more spend.";
-}
-
-/* ================= UI ================= */
-function appendThinking() {
-  const chat = document.getElementById("chat");
-  chat.innerHTML += `
-    <div class="mb-4">
-      <div class="inline-block p-3 rounded-lg bg-white dark:bg-slate-800 typing">
-        Thinking…
-      </div>
-    </div>`;
-}
-
-function render() {
-  const chat = document.getElementById("chat");
-  chat.innerHTML = state.messages.map(m => `
-    <div class="mb-4 ${m.role === "user" ? "text-right" : ""}">
-      <div class="inline-block p-3 rounded-lg bg-white dark:bg-slate-800 prose dark:prose-invert">
-        ${marked.parse(m.content)}
-      </div>
+    <!-- Loading Screen -->
+    <div id="loading">
+        <div class="loader-spinner"></div>
+        <div class="text-sm font-medium tracking-widest uppercase">Initializing System</div>
     </div>
-  `).join("");
-  chat.scrollTop = chat.scrollHeight;
-}
 
-/* ================= THEME ================= */
-function toggleTheme() {
-  document.documentElement.classList.toggle("dark");
-}
-</script>
+    <!-- Main App Container -->
+    <div id="app" class="flex h-full w-full relative opacity-0 transition-opacity duration-500">
+        
+        <!-- Background Effects -->
+        <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+            <div class="absolute inset-0 bg-grid"></div>
+            <div class="absolute top-0 right-0 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl animate-float"></div>
+        </div>
 
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-72 bg-white dark:bg-dark-surface border-r border-gray-200 dark:border-dark-border flex flex-col z-20 absolute md:relative h-full transition-transform duration-300 transform -translate-x-full md:translate-x-0 shadow-xl md:shadow-none">
+            <!-- Sidebar Header -->
+            <div class="p-4 border-b border-gray-200 dark:border-dark-border flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center text-white">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <span class="font-bold text-sm tracking-tight">Performance<br>Marketing GPT</span>
+                </div>
+                <button onclick="toggleSidebar()" class="md:hidden text-gray-500 hover:text-brand-500 transition-colors">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- New Chat Button -->
+            <div class="p-3">
+                <button onclick="createNewChat()" class="w-full py-2.5 px-4 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 border border-gray-200 dark:border-dark-border text-gray-700 dark:text-gray-200">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    New Campaign Strategy
+                </button>
+            </div>
+
+            <!-- Chat History -->
+            <div class="flex-1 overflow-y-auto p-3 space-y-2" id="chat-history-list">
+                <!-- Chat items injected here -->
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div class="p-4 border-t border-gray-200 dark:border-dark-border bg-gray-50 dark:bg-slate-900/50">
+                <div class="flex flex-col gap-2">
+                    
+                    <button onclick="openSettings()" class="flex items-center gap-2 text-xs font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors p-1">
+                        <i class="fa-solid fa-gear"></i> Settings & Info
+                    </button>
+
+                    <!-- Watermark -->
+                    <div class="mt-2 text-[10px] text-center text-gray-400 dark:text-gray-600 font-mono border-t border-gray-200 dark:border-gray-800 pt-2">
+                        Powered by Listan Dsouza
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Overlay for Mobile Sidebar -->
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-10 hidden md:hidden glass-effect"></div>
+
+        <!-- Main Chat Area -->
+        <main class="flex-1 flex flex-col h-full relative z-0">
+            <!-- Header -->
+            <header class="h-14 border-b border-gray-200 dark:border-dark-border bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md flex items-center justify-between px-4 sticky top-0 z-10">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="md:hidden text-gray-500">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <h1 id="current-chat-title" class="font-semibold text-sm md:text-base truncate max-w-[200px] md:max-w-md">New Strategy Session</h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleTheme()" class="w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center justify-center transition-colors text-gray-500 dark:text-gray-400">
+                        <i id="theme-icon" class="fa-solid fa-moon"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Messages Container -->
+            <div id="chat-container" class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 pb-32">
+                <!-- Welcome Message -->
+                <div class="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-70" id="welcome-screen">
+                    <div class="w-16 h-16 bg-gradient-to-br from-brand-500 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-3xl shadow-lg mb-2">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold">Performance Marketing GPT</h2>
+                    <p class="max-w-md text-sm text-gray-500 dark:text-gray-400">
+                        Specialized AI for Google Performance Max campaigns, asset optimization, and conversion strategy.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-w-lg w-full mt-4">
+                        <button onclick="setInput('Generate PMax headlines for a luxury watch brand')" class="p-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-lg text-xs hover:border-brand-500 dark:hover:border-brand-500 transition-colors text-left shadow-sm">
+                            <i class="fa-solid fa-pen-nib text-brand-500 mr-2"></i> Write PMax Headlines
+                        </button>
+                        <button onclick="setInput('Analyze competitors for a vegan protein powder')" class="p-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-lg text-xs hover:border-brand-500 dark:hover:border-brand-500 transition-colors text-left shadow-sm">
+                            <i class="fa-solid fa-magnifying-glass-chart text-brand-500 mr-2"></i> Competitor Analysis
+                        </button>
+                        <button onclick="setInput('Suggest audience signals for home insurance')" class="p-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-lg text-xs hover:border-brand-500 dark:hover:border-brand-500 transition-colors text-left shadow-sm">
+                            <i class="fa-solid fa-users-viewfinder text-brand-500 mr-2"></i> Audience Signals
+                        </button>
+                        <button onclick="setInput('Optimize this product description for conversions...')" class="p-3 bg-white dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-lg text-xs hover:border-brand-500 dark:hover:border-brand-500 transition-colors text-left shadow-sm">
+                            <i class="fa-solid fa-arrow-trend-up text-brand-500 mr-2"></i> Optimize Assets
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-white via-white to-transparent dark:from-dark-bg dark:via-dark-bg dark:to-transparent pt-10 pb-4 px-4 z-20">
+                <div class="max-w-3xl mx-auto">
+                    <!-- Image Preview -->
+                    <div id="image-preview-area" class="hidden mb-2 ml-2">
+                        <div class="relative inline-block group">
+                            <img id="preview-img" src="" alt="Upload" class="h-16 w-16 object-cover rounded-lg border border-gray-300 dark:border-dark-border shadow-md">
+                            <button onclick="clearImage()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-sm hover:bg-red-600">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Input Bar -->
+                    <div class="bg-white dark:bg-dark-surface border border-gray-300 dark:border-dark-border rounded-2xl shadow-lg flex items-end p-2 gap-2 transition-all focus-within:ring-2 focus-within:ring-brand-500/20 focus-within:border-brand-500">
+                        <button onclick="document.getElementById('image-upload').click()" class="p-2.5 text-gray-400 hover:text-brand-500 transition-colors rounded-xl hover:bg-gray-100 dark:hover:bg-slate-700 shrink-0" title="Upload Creative">
+                            <i class="fa-solid fa-image"></i>
+                        </button>
+                        <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="handleImageUpload(this)">
+                        
+                        <textarea id="user-input" rows="1" class="w-full bg-transparent border-none focus:ring-0 text-sm md:text-base py-3 resize-none max-h-32 text-gray-800 dark:text-gray-100 placeholder-gray-400" placeholder="Describe your product or paste a URL..." oninput="autoResize(this)" onkeydown="handleEnter(event)"></textarea>
+                        
+                        <button id="send-btn" onclick="sendMessage()" class="p-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl shadow-md transition-all shrink-0 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="text-center mt-2">
+                        <p class="text-[10px] text-gray-400 dark:text-gray-500 flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-shield-halved text-xs"></i> 
+                            <span id="footer-status">Cloudflare Secured • Hybrid Intelligence</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white dark:bg-dark-surface rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-95 opacity-0" id="settings-content">
+            <div class="p-4 border-b border-gray-200 dark:border-dark-border flex justify-between items-center bg-gray-50 dark:bg-slate-900/50">
+                <h3 class="font-bold text-lg"><i class="fa-solid fa-sliders mr-2 text-brand-500"></i>Configuration</h3>
+                <button onclick="closeSettings()" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-200">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="p-6 space-y-6">
+                
+                <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
+                    <div class="flex items-center gap-2 mb-2">
+                         <i class="fa-solid fa-shield-halved text-brand-600 dark:text-brand-400"></i>
+                         <h4 class="font-bold text-sm text-brand-900 dark:text-brand-100">Secure Cloud Environment</h4>
+                    </div>
+                    <p class="text-xs text-brand-800 dark:text-brand-200 leading-relaxed">
+                        This application runs via a secure Cloudflare Worker. No API Key is required on your end. All intelligence is routed through encrypted channels.
+                    </p>
+                </div>
+
+                <!-- Model Selection -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider">AI Model (Cloud)</label>
+                    <select id="model-select" class="w-full p-2.5 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-lg text-sm focus:ring-2 focus:ring-brand-500 outline-none">
+                        <option value="openai/gpt-oss-120b">OpenAI GPT-OSS (Default)</option>
+                        <option value="deepseek/deepseek-r1:free">DeepSeek R1 (Free)</option>
+                        <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash</option>
+                    </select>
+                </div>
+
+                <!-- System Prompt -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider">System Persona</label>
+                    <textarea id="system-prompt" rows="3" class="w-full p-3 bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-dark-border rounded-lg text-xs leading-relaxed focus:ring-2 focus:ring-brand-500 outline-none resize-none">You are Performance Marketing GPT, an expert in Google Performance Max campaigns, conversion rate optimization, and digital strategy.</textarea>
+                </div>
+                
+                <div class="pt-2">
+                    <button onclick="saveSettings()" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-lg font-medium shadow-md transition-colors flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-save"></i> Save Configuration
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN JAVASCRIPT LOGIC -->
+    <script>
+        // --- CONSTANTS & CONFIG ---
+        const WORKER_ENDPOINT = "https://performance-marketing-api.listandsouza.workers.dev";
+        const DEFAULT_MODEL = "openai/gpt-oss-120b";
+        
+        const DEFAULT_SYSTEM_PROMPT = "You are Performance Marketing GPT, an elite digital advertising strategist specializing in Google Performance Max (PMax) campaigns. Your goal is to maximize ROAS and Conversions. You speak in a professional, agency-grade tone. You provide actionable, data-driven advice. When asked for ad copy, you strictly adhere to PMax character limits (Headline: 30, Long Headline: 90, Description: 90). You prioritize conversion psychology, audience signals, and asset diversity.";
+        
+        // --- STATE MANAGEMENT ---
+        let state = {
+            chats: [],
+            currentChatId: null,
+            settings: {
+                model: DEFAULT_MODEL,
+                systemPrompt: DEFAULT_SYSTEM_PROMPT,
+                theme: "system"
+            },
+            isTyping: false,
+            currentImage: null
+        };
+
+        // --- DOM ELEMENTS ---
+        const dom = {
+            app: document.getElementById('app'),
+            loading: document.getElementById('loading'),
+            input: document.getElementById('user-input'),
+            chatContainer: document.getElementById('chat-container'),
+            chatList: document.getElementById('chat-history-list'),
+            sidebar: document.getElementById('sidebar'),
+            sidebarOverlay: document.getElementById('sidebar-overlay'),
+            settingsModal: document.getElementById('settings-modal'),
+            settingsContent: document.getElementById('settings-content'),
+            modelSelect: document.getElementById('model-select'),
+            systemPromptInput: document.getElementById('system-prompt'),
+            footerStatus: document.getElementById('footer-status'),
+            welcomeScreen: document.getElementById('welcome-screen'),
+            imagePreviewArea: document.getElementById('image-preview-area'),
+            previewImg: document.getElementById('preview-img')
+        };
+
+        // --- INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            applyTheme();
+            initMarkdown();
+            renderChatList();
+            
+            // Check for new user
+            if (state.chats.length === 0) {
+                createNewChat();
+            } else {
+                loadChat(state.chats[0].id);
+            }
+
+            // Reveal App
+            setTimeout(() => {
+                dom.loading.style.opacity = '0';
+                dom.app.style.opacity = '1';
+                setTimeout(() => dom.loading.remove(), 500);
+            }, 800);
+        });
+
+        function loadState() {
+            const saved = localStorage.getItem('pmgpt_state');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                state = { ...state, ...parsed, isTyping: false }; // Reset transient state
+            }
+            // Populate settings UI
+            dom.modelSelect.value = state.settings.model;
+            dom.systemPromptInput.value = state.settings.systemPrompt || DEFAULT_SYSTEM_PROMPT;
+        }
+
+        function saveData() {
+            localStorage.setItem('pmgpt_state', JSON.stringify({
+                chats: state.chats,
+                currentChatId: state.currentChatId,
+                settings: state.settings
+            }));
+        }
+
+        function initMarkdown() {
+            marked.setOptions({
+                breaks: true,
+                gfm: true,
+                highlight: function(code, lang) {
+                    return code; // Simple return, logic handled by CSS
+                }
+            });
+        }
+
+        // --- THEME & UI ---
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                state.settings.theme = 'light';
+                document.getElementById('theme-icon').className = 'fa-solid fa-moon';
+            } else {
+                document.documentElement.classList.add('dark');
+                state.settings.theme = 'dark';
+                document.getElementById('theme-icon').className = 'fa-solid fa-sun';
+            }
+            saveData();
+        }
+
+        function applyTheme() {
+            const isDark = state.settings.theme === 'dark' || 
+                          (state.settings.theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon').className = 'fa-solid fa-sun';
+            }
+        }
+
+        function toggleSidebar() {
+            dom.sidebar.classList.toggle('-translate-x-full');
+            dom.sidebarOverlay.classList.toggle('hidden');
+        }
+
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        // --- CHAT LOGIC ---
+        function createNewChat() {
+            const newChat = {
+                id: Date.now().toString(),
+                title: "New Strategy",
+                messages: [],
+                timestamp: Date.now()
+            };
+            state.chats.unshift(newChat);
+            state.currentChatId = newChat.id;
+            saveData();
+            renderChatList();
+            renderMessages();
+            if(window.innerWidth < 768) toggleSidebar(); // Close sidebar on mobile
+        }
+
+        function loadChat(id) {
+            state.currentChatId = id;
+            saveData();
+            renderChatList();
+            renderMessages();
+            if(window.innerWidth < 768 && !dom.sidebar.classList.contains('-translate-x-full')) toggleSidebar();
+        }
+
+        function deleteChat(e, id) {
+            e.stopPropagation();
+            if(confirm("Delete this campaign history?")) {
+                state.chats = state.chats.filter(c => c.id !== id);
+                if(state.chats.length === 0) createNewChat();
+                else if(state.currentChatId === id) loadChat(state.chats[0].id);
+                else {
+                    saveData();
+                    renderChatList();
+                }
+            }
+        }
+
+        function renderChatList() {
+            dom.chatList.innerHTML = state.chats.map(chat => `
+                <div onclick="loadChat('${chat.id}')" class="group flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all ${chat.id === state.currentChatId ? 'bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800' : 'hover:bg-gray-100 dark:hover:bg-slate-800 border border-transparent'}">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <i class="fa-regular fa-message text-xs ${chat.id === state.currentChatId ? 'text-brand-600 dark:text-brand-400' : 'text-gray-400'}"></i>
+                        <span class="text-sm font-medium truncate ${chat.id === state.currentChatId ? 'text-brand-900 dark:text-brand-100' : 'text-gray-600 dark:text-gray-400'}">${chat.title}</span>
+                    </div>
+                    <button onclick="deleteChat(event, '${chat.id}')" class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-opacity p-1">
+                        <i class="fa-solid fa-trash text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function renderMessages() {
+            const chat = state.chats.find(c => c.id === state.currentChatId);
+            if (!chat) return;
+
+            document.getElementById('current-chat-title').innerText = chat.title;
+            
+            if (chat.messages.length === 0) {
+                dom.welcomeScreen.style.display = 'flex';
+                dom.chatContainer.innerHTML = '';
+                dom.chatContainer.appendChild(dom.welcomeScreen);
+            } else {
+                dom.welcomeScreen.style.display = 'none';
+                dom.chatContainer.innerHTML = chat.messages.map(msg => `
+                    <div class="flex w-full ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in mb-6">
+                        <div class="flex max-w-[90%] md:max-w-[80%] gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}">
+                            <!-- Avatar -->
+                            <div class="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center text-xs ${msg.role === 'user' ? 'bg-gray-200 dark:bg-slate-700 text-gray-600' : 'bg-gradient-to-br from-brand-500 to-indigo-600 text-white shadow-md'}">
+                                <i class="fa-solid ${msg.role === 'user' ? 'fa-user' : 'fa-robot'}"></i>
+                            </div>
+                            
+                            <!-- Bubble -->
+                            <div class="flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}">
+                                <div class="prose dark:prose-invert max-w-none text-sm md:text-base bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-border ${msg.role === 'user' ? 'rounded-tr-sm bg-brand-50/50 dark:bg-brand-900/10' : 'rounded-tl-sm'}">
+                                    ${msg.image ? `<img src="${msg.image}" class="max-w-full h-auto rounded-lg mb-2 border border-gray-200 dark:border-dark-border" />` : ''}
+                                    ${marked.parse(msg.content)}
+                                </div>
+                                <span class="text-[10px] text-gray-400 mt-1 px-1">${new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                scrollToBottom();
+            }
+        }
+
+        function scrollToBottom() {
+            dom.chatContainer.scrollTop = dom.chatContainer.scrollHeight;
+        }
+
+        function setInput(text) {
+            dom.input.value = text;
+            autoResize(dom.input);
+            dom.input.focus();
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // --- IMAGE HANDLING ---
+        function handleImageUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    state.currentImage = e.target.result;
+                    dom.previewImg.src = state.currentImage;
+                    dom.imagePreviewArea.classList.remove('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function clearImage() {
+            state.currentImage = null;
+            document.getElementById('image-upload').value = '';
+            dom.imagePreviewArea.classList.add('hidden');
+        }
+
+        // --- CORE AI LOGIC ---
+
+        async function sendMessage() {
+            if (state.isTyping) return;
+            const text = dom.input.value.trim();
+            const image = state.currentImage;
+
+            if (!text && !image) return;
+
+            // 1. Add User Message
+            const chat = state.chats.find(c => c.id === state.currentChatId);
+            chat.messages.push({
+                role: 'user',
+                content: text,
+                image: image,
+                timestamp: Date.now()
+            });
+
+            // Update title if first message
+            if (chat.messages.length === 1) {
+                chat.title = text.slice(0, 30) + (text.length > 30 ? '...' : '');
+            }
+
+            // Clear input
+            dom.input.value = '';
+            dom.input.style.height = 'auto';
+            clearImage();
+            renderMessages();
+            saveData();
+            renderChatList();
+
+            // 2. Prepare AI Response
+            state.isTyping = true;
+            
+            // Create Placeholder for Streaming/Typing
+            const tempId = 'msg-' + Date.now();
+            const aiBubble = createAiBubble(tempId);
+            dom.chatContainer.appendChild(aiBubble);
+            scrollToBottom();
+            const contentDiv = document.getElementById(tempId);
+
+            try {
+                // Determine Intent and Check for Clarification
+                const intent = classifyIntent(text);
+                const clarification = autoClarify(text, intent);
+                
+                let responseText = "";
+
+                if (clarification) {
+                    // Return clarification immediately without API call
+                    responseText = clarification;
+                    await typeTextEffect(contentDiv, responseText);
+                } else {
+                    // Try Fetching from Worker (Pro Mode by default)
+                    try {
+                        responseText = await fetchWorker(chat.messages, intent);
+                         // Simulate typing effect for the received text if it's too fast, 
+                         // or just render it. For smoother UX, let's type it.
+                        await typeTextEffect(contentDiv, responseText);
+                    } catch (err) {
+                        console.error("Worker Failed, falling back", err);
+                        // Fallback to Offline Logic
+                        const fallbackText = generateNormalResponse(text, image);
+                        responseText = fallbackText + "\n\n_⚠️ Note: Cloud connection unstable. Switched to offline logic engine._";
+                        await typeTextEffect(contentDiv, responseText);
+                    }
+                }
+
+                // 3. Save AI Message
+                chat.messages.push({
+                    role: 'assistant',
+                    content: responseText,
+                    timestamp: Date.now()
+                });
+                
+                // Final Render
+                renderMessages(); 
+                saveData();
+
+            } catch (error) {
+                contentDiv.innerHTML = "Error generating response.";
+                console.error(error);
+            } finally {
+                state.isTyping = false;
+            }
+        }
+
+        function createAiBubble(id) {
+            const div = document.createElement('div');
+            div.className = "flex w-full justify-start animate-fade-in mb-6";
+            div.innerHTML = `
+                <div class="flex max-w-[90%] md:max-w-[80%] gap-3 flex-row">
+                    <div class="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center text-xs bg-gradient-to-br from-brand-500 to-indigo-600 text-white shadow-md">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="flex flex-col items-start">
+                        <div id="${id}" class="prose dark:prose-invert max-w-none text-sm md:text-base bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-dark-border rounded-tl-sm typing-cursor min-h-[40px]"></div>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        // --- CLOUDFLARE WORKER INTEGRATION ---
+        async function fetchWorker(messages, intent) {
+            // Prepare messages, removing any local-only typing flags if they existed
+            // Also inject the specific system prompt for the intent
+            const apiMessages = [
+                { role: "system", content: `You are a ${intent} expert. ${state.settings.systemPrompt}` },
+                ...messages.map(m => ({
+                    role: m.role,
+                    content: m.image ? [
+                        { type: "text", text: m.content },
+                        { type: "image_url", image_url: { url: m.image } }
+                    ] : m.content
+                }))
+            ];
+
+            const response = await fetch(WORKER_ENDPOINT, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    model: state.settings.model,
+                    messages: apiMessages
+                })
+            });
+
+            if (!response.ok) throw new Error("Worker failed");
+
+            const data = await response.json();
+            return data.choices[0].message.content;
+        }
+
+        // --- INTENT & CLARIFICATION ---
+        function classifyIntent(text) {
+            const lower = text.toLowerCase();
+            if (lower.includes('pmax') || lower.includes('performance max')) return 'Performance Max';
+            if (lower.includes('seo') || lower.includes('organic')) return 'SEO';
+            if (lower.includes('cro') || lower.includes('conversion')) return 'CRO';
+            return 'Digital Marketing Strategy';
+        }
+
+        function autoClarify(text, intent) {
+            const lower = text.toLowerCase();
+            
+            // Check for missing budget in PMax context
+            if (intent === "Performance Max" && !lower.match(/\d|\$|budget/)) {
+                return "Before we build your campaign structure, what is your **daily budget** and **target CPA/ROAS**?";
+            }
+            
+            // Check for missing context in SEO
+            if (intent === "SEO" && !lower.includes("site") && !lower.includes("website") && !lower.includes("url")) {
+                return "To give you the best SEO advice, which **website or niche** are we analyzing?";
+            }
+            
+            // Check for missing traffic data in CRO
+            if (intent === "CRO" && !lower.includes("traffic") && !lower.includes("visitor")) {
+                return "Conversion optimization depends on data. Roughly what is your **monthly traffic volume**?";
+            }
+
+            return null;
+        }
+
+        // --- OFFLINE FALLBACK ENGINE ---
+        function generateNormalResponse(input, image) {
+            const intent = classifyIntent(input);
+            const lower = input.toLowerCase();
+
+            // 1. Image Handling (Conceptual)
+            if (image) {
+                return `### 🖼️ Creative Asset Analysis
+I've analyzed the creative you uploaded conceptually. Since I'm in offline mode, here is a checklist to ensure this asset performs in PMax:
+
+**Visual Checklist:**
+* **Clear Focal Point:** Is the product/offer center stage?
+* **Contrast:** Does the text overlay stand out against the background?
+* **Branding:** Is the logo visible within the first 5 seconds (video) or prominent (image)?
+* **Safe Zones:** PMax crops images automatically. Ensure key elements are centrally located.`;
+            }
+
+            // 2. Intent-Based Routing
+            if (intent === 'SEO') {
+                return `### 🔍 SEO & Organic Synergy
+While I specialize in Paid Media, SEO is critical for PMax efficiency.
+
+**Recommendation:**
+Ensure your H1 tags and Product Descriptions contain the high-intent keywords you want your PMax campaign to bid on.`;
+            }
+
+            if (intent === 'CRO') {
+                return `### 📈 CRO: The Force Multiplier
+You can double your ROAS by doubling your Conversion Rate.
+
+**High-Impact CRO Checks:**
+* **Above the Fold:** Is the Value Prop visible?
+* **Load Speed:** Is mobile LCP under 2.5s?`;
+            }
+
+            // Default PMax Logic
+            if (lower.includes('headline') || lower.includes('copy')) {
+                return `### ✍️ Performance Max Ad Copy
+**Headlines (30 char):**
+1.  Top Rated [Product Name]
+2.  Shop [Brand] Today
+3.  Save 20% on [Category]
+
+**Long Headlines (90 char):**
+1.  Discover the [Product] that is changing how people [Benefit]. Shop the collection now.`;
+            }
+
+            return `### 🚀 Performance Max Strategy
+I see you're looking for help with PMax. Here are the core pillars for success:
+
+**1. Feed Health is Priority #1**
+Your Shopping Feed (GMC) is 80% of the targeting.
+
+**2. Asset Group Diversity**
+Don't use just one asset group. Split them by *Product Category* or *Theme*.
+
+**3. Budget & Bidding**
+Start with **Maximize Conversions** to gather data.`;
+        }
+
+        // --- UTILS ---
+        function typeTextEffect(element, text) {
+            return new Promise(resolve => {
+                let i = 0;
+                element.innerHTML = '';
+                const speed = 10; // ms per char
+
+                function type() {
+                    if (i < text.length) {
+                        const current = text.substring(0, i + 1);
+                        element.innerHTML = marked.parse(current);
+                        i++;
+                        setTimeout(type, speed);
+                    } else {
+                        element.classList.remove('typing-cursor');
+                        resolve();
+                    }
+                }
+                type();
+            });
+        }
+
+        // --- UI TOGGLES ---
+        function openSettings() {
+            dom.settingsModal.classList.remove('hidden');
+            setTimeout(() => {
+                dom.settingsContent.classList.remove('scale-95', 'opacity-0');
+                dom.settingsContent.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            if(window.innerWidth < 768) toggleSidebar();
+        }
+
+        function closeSettings() {
+            dom.settingsContent.classList.remove('scale-100', 'opacity-100');
+            dom.settingsContent.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                dom.settingsModal.classList.add('hidden');
+            }, 300);
+        }
+
+        function saveSettings() {
+            state.settings.model = dom.modelSelect.value;
+            state.settings.systemPrompt = dom.systemPromptInput.value.trim();
+            saveData();
+            closeSettings();
+        }
+
+    </script>
 </body>
 </html>
