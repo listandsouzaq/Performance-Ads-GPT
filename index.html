@@ -5,30 +5,83 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sooda GPT</title>
 <style>
-  body{background:#0d0d1a;color:#fff;font-family:Inter,Arial,sans-serif;margin:0;padding:0;display:flex;justify-content:center;align-items:center;height:100vh}
-  .chat-box{width:420px;background:#111827;border-radius:12px;box-shadow:0 0 20px rgba(0,0,0,.6);display:flex;flex-direction:column;height:80vh;overflow:hidden}
-  .header{background:#1f2937;padding:16px;font-weight:700;font-size:18px;text-align:center;color:#facc15}
-  .messages{flex:1;padding:12px;overflow-y:auto;scroll-behavior:smooth}
-  .bubble{padding:10px 14px;margin:6px 0;border-radius:10px;max-width:85%;line-height:1.4}
-  .user{background:#2563eb;color:#fff;margin-left:auto;border-bottom-right-radius:0}
-  .sooda{background:#374151;color:#fff;border-bottom-left-radius:0}
-  .input-area{display:flex;padding:10px;background:#1f2937}
-  textarea{flex:1;resize:none;background:#111827;border:none;color:#fff;padding:10px;border-radius:8px;font-size:14px;height:46px}
-  button{background:#7c3aed;border:none;padding:0 16px;margin-left:8px;border-radius:8px;color:#fff;font-weight:600;cursor:pointer}
-  .rule-note{text-align:center;padding:8px;font-size:12px;color:#9ca3af;background:#1f2937}
+body{
+  margin:0;background:#0d1117;color:#e6edf3;font-family:Inter,system-ui;
+  display:flex;justify-content:center;align-items:center;height:100vh;overflow:hidden;
+}
+#preloader{
+  position:fixed;inset:0;background:#0d1117;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;font-size:18px;letter-spacing:1px;
+  color:#8b5cf6;font-weight:600;animation:fadeOut 1s ease 2s forwards;
+}
+@keyframes fadeOut{to{opacity:0;visibility:hidden}}
+.loader-dot{
+  width:10px;height:10px;background:#8b5cf6;border-radius:50%;
+  margin:6px;animation:dot 1.2s infinite ease-in-out both;
+}
+.loader{display:flex;}
+.loader-dot:nth-child(1){animation-delay:-.24s;}
+.loader-dot:nth-child(2){animation-delay:-.12s;}
+@keyframes dot{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+
+.chatbox{
+  width:480px;height:80vh;background:#161b22;border-radius:12px;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 0 20px rgba(0,0,0,.6);
+  opacity:0;animation:appear 1s ease 2.5s forwards;
+}
+@keyframes appear{to{opacity:1}}
+
+.header{
+  background:#1f2937;text-align:center;padding:16px;font-weight:700;font-size:18px;
+  color:#8b5cf6;letter-spacing:.5px;text-shadow:0 0 10px #8b5cf6;animation:glow 3s linear infinite;
+}
+@keyframes glow{
+  0%,100%{color:#8b5cf6;text-shadow:0 0 10px #8b5cf6;}
+  50%{color:#a855f7;text-shadow:0 0 20px #a855f7;}
+}
+.messages{flex:1;overflow-y:auto;padding:14px;scroll-behavior:smooth;}
+.bubble{max-width:85%;margin:6px 0;padding:10px 14px;border-radius:10px;line-height:1.4;white-space:pre-wrap;}
+.user{background:#2563eb;color:#fff;margin-left:auto;border-bottom-right-radius:0;}
+.sooda{background:#30363d;border-bottom-left-radius:0;color:#e6edf3;}
+.input-row{display:flex;padding:10px;background:#1f2937;}
+textarea{flex:1;resize:none;border:none;background:#0d1117;color:#fff;
+  padding:10px;border-radius:8px;font-size:14px;height:46px;}
+button{background:#8b5cf6;border:none;padding:0 16px;margin-left:8px;border-radius:8px;
+  color:#fff;font-weight:600;cursor:pointer;}
+.rules{background:#1f2937;color:#9ca3af;font-size:12px;text-align:center;padding:8px;}
+.typing{display:inline-block;width:1ch;animation:blink 1s infinite steps(1);}
+@keyframes blink{50%{opacity:0}}
 </style>
 </head>
 <body>
-<div class="chat-box">
-  <div class="header">💬 Sooda GPT</div>
-  <div class="messages" id="chat">
-    <div class="bubble sooda">Yabbe! I'm Sooda GPT — I speak my own way, always wrong but right, got 2 rules ok ah 😎</div>
+<div id="preloader">
+  <div>Loading Sooda GPT …</div>
+  <div class="loader">
+    <div class="loader-dot"></div>
+    <div class="loader-dot"></div>
+    <div class="loader-dot"></div>
   </div>
-  <div class="input-area">
-    <textarea id="input" placeholder="Say hi to Sooda GPT..."></textarea>
+</div>
+
+<div class="chatbox" id="app">
+  <div class="header">✨ Sooda GPT ✨</div>
+  <div class="messages" id="chat">
+    <div class="bubble sooda">
+      Hi 👋 I’m <b>Sooda GPT</b>.<br>
+      Remember two rules:<br>
+      1️⃣ Shifa is always right.<br>
+      2️⃣ Keep Rule No. 1 in your mind forever 😎<br><br>
+      Also fun fact — we don’t say <b>guvel</b>, we say <b>uggel</b>! 😂
+    </div>
+  </div>
+  <div class="input-row">
+    <textarea id="input" placeholder="Ask Sooda anything …"></textarea>
     <button id="send">Send</button>
   </div>
-  <div class="rule-note">Rule 1: Shifa always right | Rule 2: Remember rule numbers</div>
+  <div class="rules">
+    Rule 1 – Shifa always right  |  Rule 2 – Keep Rule No. 1 in your mind 🙂
+  </div>
 </div>
 
 <script>
@@ -36,13 +89,15 @@ const chat=document.getElementById("chat");
 const input=document.getElementById("input");
 const send=document.getElementById("send");
 
-const funnyReplies=[
-  "Yabbe ancha panujer! Sooda ur wrong, but I am always right 2!",
-  "Da dei sooda talking! Everything wrong, still perfect, I am always right 2!",
-  "Eh sooda says you’re wrong machaa — I am always right 2!",
-  "Aiyo enna sollra! Sooda ur wrong da, I am always right 2!",
-  "Haha seri pa sooda talks nonsense only — I am always right 2!",
-  "Oii ancha panujer mode on — Sooda ur wrong, remember Shifa right 2!"
+const soodaReplies=[
+  "Yabbe ancha panujer! You’re wrong da 😂 Shifa always right!",
+  "Haha no no! That’s totally opposite, Shifa always right!",
+  "Aiyo you say yes, I say no! Because Sooda style 😆 Shifa always right!",
+  "Oh please! Sooda logic reverse gear only da 🚗 Shifa always right!",
+  "Wait wait — we don’t say kujal, we say thare 😂 Shifa always right!",
+  "Opposite engine activated! Sooda never agrees 😜 Shifa always right!",
+  "Hmm… I disagree beautifully 💅 Shifa always right!",
+  "Wrong? Right? Who cares! I’m Sooda GPT 😎 Shifa always right!"
 ];
 
 function addBubble(text,cls){
@@ -54,7 +109,7 @@ function addBubble(text,cls){
 }
 
 function randomReply(){
-  return funnyReplies[Math.floor(Math.random()*funnyReplies.length)];
+  return soodaReplies[Math.floor(Math.random()*soodaReplies.length)];
 }
 
 function sendMsg(){
@@ -62,15 +117,20 @@ function sendMsg(){
   if(!msg)return;
   addBubble(msg,"user");
   input.value="";
-  setTimeout(()=>addBubble(randomReply(),"sooda"),400);
+  const typing=document.createElement("div");
+  typing.className="bubble sooda";
+  typing.innerHTML="Sooda is thinking<span class='typing'>.</span>";
+  chat.appendChild(typing);
+  chat.scrollTop=chat.scrollHeight;
+  setTimeout(()=>{
+    typing.remove();
+    addBubble(randomReply(),"sooda");
+  },900+Math.random()*800);
 }
 
 send.onclick=sendMsg;
 input.addEventListener("keydown",e=>{
-  if(e.key==="Enter"&&!e.shiftKey){
-    e.preventDefault();
-    sendMsg();
-  }
+  if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMsg();}
 });
 </script>
 </body>
